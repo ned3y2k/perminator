@@ -50,7 +50,7 @@ class DataBinder {
 			} else {
 				$prop->setAccessible(true);
 				$setterName = $this->createSetterNameFrom($prop->name);
-				if($this->isExistSetter($setterName))
+				if($this->isExistSetter($setterName, $desInstance))
 					$desInstance->$setterName($data[$prop->name]);
 				elseif (array_key_exists($prop->name, $data))
 					$prop->setValue($desInstance, $data[$prop->name]);
@@ -70,9 +70,9 @@ class DataBinder {
 		return $name;
 	}
 
-	private function isExistSetter($setterName) {
-		// TODO 이쪽 부분 정의 필요
-		return false;
+	private function isExistSetter($setterName, $desInstance) {
+		$refObject = new \ReflectionObject($desInstance);
+		return $refObject->hasMethod($setterName);
 	}
 }
 class DataBindingException {
