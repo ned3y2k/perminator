@@ -26,7 +26,7 @@ class AbstractFactory {
 			array_shift ( $args );
 			return $reflection->newInstanceArgs ( $args );
 		} else {
-			throw new \InvalidArgumentException(); // TODO 이쪽 메시지 확실히 할것!
+			throw new \InvalidArgumentException(); // FIXME AbstractFactory newInstance Exception 메시지 확실히 할것!
 		}
 	}
 }

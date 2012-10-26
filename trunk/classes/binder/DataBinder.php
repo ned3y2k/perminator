@@ -8,7 +8,6 @@ class DataBinder {
 	private $setterPrefix;
 	private $incomplete = true;
 	private $keyNamePrefix;
-
 	public function __construct($keyNamePrefix = "", $setterPrefix = "set") {
 		if (is_string ( $setterPrefix ))
 			$this->setterPrefix = $setterPrefix;
@@ -66,7 +65,7 @@ class DataBinder {
 			} else {
 				$prop->setAccessible ( true );
 				$setterName = $this->createSetterNameFrom ( $prop->name );
-				if ($this->isExistSetter ( $setterName, $desInstance )) {
+				if ($this->existSetter ( $setterName, $desInstance ) && array_key_exists ( $keyName, $data )) {
 					$desInstance->$setterName ( $data [$prop->name] );
 				} elseif (array_key_exists ( $keyName, $data ))
 					$prop->setValue ( $desInstance, $data [$keyName] );
@@ -84,7 +83,7 @@ class DataBinder {
 		$name .= substr ( $fieldName, 1 );
 		return $name;
 	}
-	private function isExistSetter($setterName, $desInstance) {
+	private function existSetter($setterName, $desInstance) {
 		$refObject = new \ReflectionObject ( $desInstance );
 		return $refObject->hasMethod ( $setterName );
 	}

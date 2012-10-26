@@ -1,6 +1,6 @@
 <?php
 namespace classes\support;
-// TODO 동작 재설계 필요
+// FIXME ClassAliasRepository 동작 재설계 필요
 class ClassAliasRepository {
 	private $metaData;
 	private $ref;
@@ -14,7 +14,7 @@ class ClassAliasRepository {
 	 * @param mixed $value
 	 * @return string Namespace + ClassName
 	 */
-	public function findFullNameByValue($value) {
+	public function findFullClassName($value) {
 		if (is_string ( $value )) {
 			if ($this->isAlias ( $value )) {
 				return $this->getFullNameByAlias ( substr ( $value, 1 ) );

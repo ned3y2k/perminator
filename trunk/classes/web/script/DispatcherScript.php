@@ -2,6 +2,7 @@
 
 namespace classes\web\script;
 
+use app\controller\IndexController;
 use classes\web\bind\meta\RequestParamCollection;
 use classes\binder\DataBinder;
 use conf\Core as CoreConfig;
@@ -12,6 +13,11 @@ use classes\web\bind\meta\RequestParam;
 use classes\lang\ClassNotFoundException;
 use classes\web\script\http\Request;
 
+/**
+ * FIXME DispatcherScript에서 BeanDependencyInjector와의 분리가 필요
+ * @author User
+ *
+ */
 class DispatcherScript {
 	/**
 	 *
@@ -31,38 +37,37 @@ class DispatcherScript {
 
 		$className = CoreConfig::CONTROLLER_NAMESPACE_PREFIX . $className;
 
-		$controller = $this->classLoader->newInstance ( $className );
+		$controllerName = $this->classLoader->findFullClassName ( $className );
+		$controllerClassRef = new \ReflectionClass ( $controllerName );
+		$constructorArgsInstances = $this->getConstructorArgsInstances ( $controllerClassRef->getConstructor () );
+		$controller = $controllerClassRef->newInstanceArgs ( $constructorArgsInstances );
 		$methodName = $getReq->getParameter ( "method", CoreConfig::CONTROLLER_DEFAULT_METHOD );
 
 		if (! $controller instanceof Controller)
 			throw new NotControllerException ( $className . " is Not Controller" );
 
-		$controllerRef = new \ReflectionObject ( $controller );
-		$this->injectPropertiesValue ( $controllerRef );
+		$controllerInstanceRef = new \ReflectionObject ( $controller );
 
-		$methodRef = $controllerRef->getMethod ( $methodName );
+		$methodRef = $controllerInstanceRef->getMethod ( $methodName );
 		$this->className = $className;
 		$this->methodLine = $methodRef->getStartLine ();
 
-		$this->printPage ( $methodRef->invokeArgs ( $controller, $this->injectMethodParams ( $methodRef->getParameters () ) ) );
+		$this->printPage ( $methodRef->invokeArgs ( $controller, $this->injectRequestParams ( $methodRef->getParameters () ) ) );
 	}
+	private function getConstructorArgsInstances(\ReflectionMethod $constructorRef) {
+		$paramRefs = $constructorRef->getParameters ();
 
-	/**
-	 *
-	 * @param
-	 *        	controllerRef \ReflectionObject
-	 */
-	private function injectPropertiesValue(\ReflectionObject &$controllerRef) {
-		$propsRef = $controllerRef->getProperties ();
-		foreach ( $propsRef as &$propRef ) {
-			/* @var $propRef \ReflectionProperty */
-			$lockRequierd = $this->propertieUnLock ( $propRef );
-
-			if ($lockRequierd)
-				$this->propertieLock ( $propRef );
+		$constructorArgs = array ();
+		foreach ( $paramRefs as $paramRef ) {
+			/* @var $paramRef \ReflectionParameter */
+			array_push ( $constructorArgs, $paramRef->getClass ()->newInstance () );
 		}
+
+		return $constructorArgs;
 	}
-	private function injectMethodParams(array $refParams) {
+
+
+	private function injectRequestParams(array $refParams) {
 		$params = array ();
 		$classLoader = $this->classLoader;
 
@@ -73,13 +78,12 @@ class DispatcherScript {
 
 			$reqParamCollectionInstance = $classLoader->newInstance ( $refParam->getClass ()->name );
 
-			$this->bindParam ( $reqParamCollectionInstance );
+			$this->bindRequestParam ( $reqParamCollectionInstance );
 			array_push ( $params, $reqParamCollectionInstance );
 		}
 
 		return $params;
 	}
-
 	private function propertieUnLock(\ReflectionProperty &$propRef) {
 		if (! $propRef->isPublic ()) {
 			$propRef->setAccessible ( true );
@@ -87,23 +91,21 @@ class DispatcherScript {
 		}
 		return false;
 	}
-
-	private function bindParam(RequestParamCollection &$reqParamCollection) {
+	private function bindRequestParam(RequestParamCollection &$reqParamCollection) {
 		$requestParams = &$reqParamCollection->getRequestParams ();
-		$dataBinder = new DataBinder ($reqParamCollection->getKeyNamePrefix());
+		$dataBinder = new DataBinder ( $reqParamCollection->getKeyNamePrefix () );
 
 		foreach ( $requestParams as &$reqParam ) {
 			/* @var $reqParam RequestParam */
 			$className = $reqParam->getClassName ();
 			$desInstance = new $className ();
 
-			$dataBinder->binding ( $desInstance, $this->getRequestData ( $reqParam->getMethod() ),  $reqParam->isIncomplete());
+			$dataBinder->binding ( $desInstance, $this->getRequestData ( $reqParam->getMethod () ), $reqParam->isIncomplete () );
 			if ($reqParam->isRequired () && is_null ( $desInstance ))
 				throw new BeanInitializationException ( "{$this->className}[{$this->methodLine}]: {$reqParam->getClassName()} Required. but not ready" );
 			$reqParam->value = $desInstance;
 		}
 	}
-
 	private function getRequestData(&$reqMethodType) {
 		$data = null;
 		switch ($reqMethodType) {
@@ -122,13 +124,11 @@ class DispatcherScript {
 		}
 		return $data;
 	}
-
 	private function propertieLock(\ReflectionProperty &$propRef) {
 		if (! $propRef->isPublic ()) {
 			! $propRef->setAccessible ( false );
 		}
 	}
-
 	public function printPage($page) {
 		if (! is_string ( $page ) && ! ($page instanceof View) && ! is_null ( $page ))
 			throw new \InvalidArgumentException ( "Return type is not View(Only accept a String or View or Null)" );
@@ -138,7 +138,6 @@ class DispatcherScript {
 		elseif ($page instanceof View)
 			$view = &$page;
 
-			/* @var $view ModelAndView */
 		header ( "Content-Type: " . $view->getContentType () );
 		echo $view->getContent ();
 	}

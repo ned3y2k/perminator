@@ -4,7 +4,7 @@ namespace classes\web\script\http;
  * @author ned3y2k
  * Perminator WebRequest Boxing Class
  */
-class Request { // TODO DataBinder와 연결 하는 작업 필요
+class Request { // FIXME DataBinder와 연결 하는 작업 필요
 	private static $requestInstance = array();
 	private $parameters = array();
 	const GET = 0;
