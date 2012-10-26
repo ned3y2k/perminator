@@ -3,7 +3,7 @@
 namespace classes\lang;
 
 /**
- * TODO 아직 사용 안됨
+ * FIXME LoadedClassMeta 아직 사용 안됨
  * @author User
  *
  */

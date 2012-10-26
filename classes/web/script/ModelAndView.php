@@ -76,8 +76,9 @@ class ModelAndView implements View {
 	public function findViewFilePath($fileName) {
 		if (file_exists(Core::DEFAULT_VIEW_PATH . $fileName))
 			return Core::DEFAULT_VIEW_PATH . $fileName;
-		elseif (file_exists($fileName))
+		elseif (file_exists($fileName)) {
 			return $fileName;
+		}
 		else
 			throw new ViewNotFoundException($fileName);
 	}
