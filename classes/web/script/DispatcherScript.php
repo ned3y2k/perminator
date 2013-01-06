@@ -38,9 +38,7 @@ class DispatcherScript {
 		$className = CoreConfig::CONTROLLER_NAMESPACE_PREFIX . $className;
 
 		$controllerName = $this->classLoader->findFullClassName ( $className );
-		$controllerClassRef = new \ReflectionClass ( $controllerName );
-		$constructorArgsInstances = $this->getConstructorArgsInstances ( $controllerClassRef->getConstructor () );
-		$controller = $controllerClassRef->newInstanceArgs ( $constructorArgsInstances );
+		$controller = $this->createControllerInstance(new \ReflectionClass ( $controllerName ));
 		$methodName = $getReq->getParameter ( "method", CoreConfig::CONTROLLER_DEFAULT_METHOD );
 
 		if (! $controller instanceof Controller)
@@ -54,6 +52,17 @@ class DispatcherScript {
 
 		$this->printPage ( $methodRef->invokeArgs ( $controller, $this->injectRequestParams ( $methodRef->getParameters () ) ) );
 	}
+
+	private function createControllerInstance($controllerClassRef) {
+		$controllerConstructor = $controllerClassRef->getConstructor ();
+		if(!is_null($controllerConstructor)) {
+			$constructorArgsInstances = $this->getConstructorArgsInstances ( $controllerConstructor );
+			return $controllerClassRef->newInstanceArgs ( $constructorArgsInstances );
+		} else {
+			return $controllerClassRef->newInstance();
+		}
+	}
+
 	private function getConstructorArgsInstances(\ReflectionMethod $constructorRef) {
 		$paramRefs = $constructorRef->getParameters ();
 
