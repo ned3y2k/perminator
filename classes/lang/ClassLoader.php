@@ -93,7 +93,7 @@ class ClassLoader {
 	 * @return \classes\lang\ClassLoader
 	 */
 	public static function getClassLoader() {
-		if (self::$instance == NIL)
+		if (!is_null(self::$instance) && is_object(self::$instance))
 			self::$instance = new ClassLoader ();
 		return self::$instance = new ClassLoader ();
 	}
