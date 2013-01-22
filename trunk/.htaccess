@@ -1,7 +1,9 @@
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule ^(.+)\.(.*) index.php?class=$1&method=$2 [N,QSA,L]
-	RewriteRule ^(.+)$ index.php?class=$1 [N,QSA,L]
+RewriteEngine On
+RewriteRule ^(.*)resources/(.*) ./resources/$2 [N,QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)\.(.*) index.php?class=$1&method=$2 [N,QSA,L]
+RewriteRule ^(.+)$ index.php?class=$1 [N,QSA,L]
 </IfModule>
