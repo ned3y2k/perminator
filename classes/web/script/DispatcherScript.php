@@ -32,6 +32,8 @@ class DispatcherScript {
 		$getReq = Request::getInstance ( Request::GET );
 
 		$className = $getReq->getParameter ( "class", null );
+		$className = str_replace('/', '\\', $className);
+		
 		if ($className == null || $className == CoreConfig::ENTRY_SCRIPT)
 			$className = CoreConfig::DEFAULT_CONTROLLER;
 
