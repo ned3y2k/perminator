@@ -96,7 +96,7 @@ class ModelAndView implements View {
 		}
 	}
 	private function isPhpScript($name) {return strtolower ( substr ( $name, - 4 ) ) == ".php";}
-	public function getAttribute($name) {
+	public function get($name) {
 		return $this->modelMap->get($name);
 	}
 	public function findViewFilePath($fileName) {
