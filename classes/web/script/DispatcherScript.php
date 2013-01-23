@@ -2,6 +2,8 @@
 
 namespace classes\web\script;
 
+use classes\ui\ModelMap;
+
 use app\controller\IndexController;
 use classes\web\bind\meta\RequestParamCollection;
 use classes\binder\DataBinder;
@@ -26,6 +28,8 @@ class DispatcherScript {
 	private $classLoader;
 	private $methodLine;
 	private $className;
+	private $modelMap = array();
+
 	public function doDispatch() {
 		$this->classLoader = ClassLoader::getClassLoader ();
 
@@ -33,7 +37,7 @@ class DispatcherScript {
 
 		$className = $getReq->getParameter ( "class", null );
 		$className = str_replace('/', '\\', $className);
-		
+
 		if ($className == null || $className == CoreConfig::ENTRY_SCRIPT)
 			$className = CoreConfig::DEFAULT_CONTROLLER;
 
@@ -52,7 +56,7 @@ class DispatcherScript {
 		$this->className = $className;
 		$this->methodLine = $methodRef->getStartLine ();
 
-		$this->printPage ( $methodRef->invokeArgs ( $controller, $this->injectRequestParams ( $methodRef->getParameters () ) ) );
+		$this->printPage ( $methodRef->invokeArgs ( $controller, $this->injectParams ( $methodRef->getParameters () ) ) );
 	}
 
 	private function createControllerInstance($controllerClassRef) {
@@ -78,19 +82,22 @@ class DispatcherScript {
 	}
 
 
-	private function injectRequestParams(array $refParams) {
+	private function injectParams(array $refParams) {
 		$params = array ();
 		$classLoader = $this->classLoader;
 
 		foreach ( $refParams as &$refParam ) {
 			/* @var $refParam \ReflectionParameter */
-			if (! $refParam->getClass ()->implementsInterface ( 'classes\web\bind\meta\RequestParamCollection' ))
-				throw new \InvalidArgumentException ();
+			$type = $refParam->getClass ();
+			if ($type->implementsInterface ( 'classes\web\bind\meta\RequestParamCollection' )) {
+				$paramInstance = $classLoader->newInstance ( $refParam->getClass ()->name );
+				$this->bindRequestParam ( $paramInstance );
+			} elseif($type->getName() == 'classes\ui\ModelMap') {
+				$paramInstance = new ModelMap();
+				array_push($this->modelMap, $paramInstance);
+			} else throw new \InvalidArgumentException ();
 
-			$reqParamCollectionInstance = $classLoader->newInstance ( $refParam->getClass ()->name );
-
-			$this->bindRequestParam ( $reqParamCollectionInstance );
-			array_push ( $params, $reqParamCollectionInstance );
+			array_push ( $params, $paramInstance );
 		}
 
 		return $params;
@@ -149,6 +156,17 @@ class DispatcherScript {
 		elseif ($page instanceof View)
 			$view = &$page;
 
+		if($view instanceof ModelAndView && count($this->modelMap) > 0) {
+			$modelMap = new ModelMap();
+
+			$index = count($this->modelMap);
+			for ($i = 0; $i < $index; $i++) {
+				$modelMap->merge($this->modelMap[$i]);
+			}
+
+			$view->setModelMap($modelMap);
+		}
+
 		header ( "Content-Type: " . $view->getContentType () );
 		echo $view->getContent ();
 	}
@@ -157,4 +175,3 @@ class BeanInitializationException extends \RuntimeException {
 }
 class NotControllerException extends \RuntimeException {
 }
-?>
