@@ -54,7 +54,7 @@ class ModelMap {
 		Assert::notNull($attributeName, "Model attribute name must not be null");
 		Assert::arrayNotHasKey($attributeName, $this->map, "this Model the not has Key.");
 
-		return $this->map[$$attributeName];
+		return $this->map[$attributeName];
 	}
 
 	public function merge(ModelMap $modelMap) {
