@@ -151,9 +151,10 @@ class DispatcherScript {
 		if (! is_string ( $page ) && ! ($page instanceof View) && ! is_null ( $page ))
 			throw new \InvalidArgumentException ( "Return type is not View(Only accept a String or View or Null)" );
 
-		if (is_string ( $page ) || is_null ( $page ))
+		if (is_string ( $page ) || is_null ( $page )) {
+			$this->processRedirect($page);
 			$view = new ModelAndView ( $page );
-		elseif ($page instanceof View)
+		} elseif ($page instanceof View)
 			$view = &$page;
 
 		if($view instanceof ModelAndView && count($this->modelMap) > 0) {
@@ -169,6 +170,10 @@ class DispatcherScript {
 
 		header ( "Content-Type: " . $view->getContentType () );
 		echo $view->getContent ();
+	}
+	private function processRedirect($page) {
+		if(is_string($page) && substr_count($page, 'redirect:') > 0)
+			header("location:".substr($page, 9));
 	}
 }
 class BeanInitializationException extends \RuntimeException {
