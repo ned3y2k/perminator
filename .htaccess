@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteRule ^(.*)resources/(.*) ./resources/$2 [N,QSA,L]
+RewriteRule ^(.*)resources/(.*) resources/$2 [L]
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
