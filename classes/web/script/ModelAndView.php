@@ -102,9 +102,11 @@ class ModelAndView implements View {
 	public function findViewFilePath($fileName) {
 		if (file_exists ( Core::DEFAULT_VIEW_PATH . $fileName ))
 			return Core::DEFAULT_VIEW_PATH . $fileName;
-		elseif (file_exists ( $fileName )) {
+		elseif ($fileName != "index.php")
+			throw new ViewNotFoundException("Can not reference perminator default file");
+		elseif (file_exists ( $fileName ))
 			return $fileName;
-		} else
+		else
 			throw new ViewNotFoundException ( $fileName );
 	}
 }
