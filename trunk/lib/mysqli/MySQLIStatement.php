@@ -17,14 +17,14 @@ class MySQLIStatement extends \mysqli_stmt {
 	public function fetchObjects($class) {
 		$objects = array();
 
-		while(($row = $this->fetchObejct($class)) != null) {
+		while(($row = $this->fetchObject($class)) != null) {
 			$objects[] = $row;
 		}
 
 		return $objects;
 	}
 
-	public function fetchObejct($class) {
+	public function fetchObject($class) {
 		$fieldMapCount = count($this->fieldMap);
 		$this->isMissingFieldMap ( $fieldMapCount );
 
