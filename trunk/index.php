@@ -1,4 +1,6 @@
 <?php
+define('DEBUG', true);
+
 use classes\web\script\DispatcherScript;
 use classes\lang\ClassLoader;
 

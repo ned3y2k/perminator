@@ -36,19 +36,29 @@ class ClassLoader {
 		$this->includePaths = explode ( PATH_SEPARATOR, get_include_path () );
 		$this->includePaths = array_merge ( $incPath, $this->includePaths );
 
-		set_error_handler ( array (
-				$this->errorHandler,
-				"publish"
-		) );
-		set_exception_handler ( array (
-				$this->exceptionHandler,
-				"publish"
-		) );
+		$this->initErrorHandler ();
+
 		$this->includedClasses = array ();
 
 		$this->classAliasRepository = new ClassAliasRepository ();
 		$this->objectFactory = new AbstractFactory ( $this );
 	}
+
+	 private function initErrorHandler() {
+	 	if(defined('DEBUG') && DEBUG) {
+	 		ini_get('display_errors', 1);
+	 		error_reporting(E_ALL);
+			set_error_handler ( array (
+					$this->errorHandler,
+					"publish"
+			) );
+			set_exception_handler ( array (
+					$this->exceptionHandler,
+					"publish"
+			) );
+	 	}
+	}
+
 
 	/**
 	 *
