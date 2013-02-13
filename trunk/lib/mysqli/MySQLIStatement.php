@@ -3,15 +3,24 @@ namespace lib\mysqli;
 
 use classes\binder\DataBinder;
 
+
 class MySQLIStatement extends \mysqli_stmt {
-	private $fieldMap = array();
+	private $fieldMaps = array();
+	private $query = null;
+	private $link;
 
 	function __construct($link,$query) {
 		parent::__construct($link,$query);
+		$this->link = $link;
+		$this->query = $query;
 	}
 
-	public function addFieldMaps($dbFieldName, $properyName) {
-		$this->fieldMap[$dbFieldName] = $properyName;
+	public function addFieldMaps($fieldMaps) {
+		$this->fieldMaps = array_merge($this->fieldMaps, $fieldMaps);
+	}
+
+	public function addFieldMap($dbFieldName, $properyName) {
+		$this->fieldMaps[$dbFieldName] = $properyName;
 	}
 
 	public function fetchObjects($class) {
@@ -21,11 +30,13 @@ class MySQLIStatement extends \mysqli_stmt {
 			$objects[] = $row;
 		}
 
+		$this->free_result();
+		$this->close();
 		return $objects;
 	}
 
 	public function fetchObject($class) {
-		$fieldMapCount = count($this->fieldMap);
+		$fieldMapCount = count($this->fieldMaps);
 		$this->isMissingFieldMap ( $fieldMapCount );
 
 		$tempRowArray = $this->fetchArray ( $fieldMapCount );
@@ -47,7 +58,7 @@ class MySQLIStatement extends \mysqli_stmt {
 	}
 
 	private function findObjectPropertyNameByDbFieldName($fieldName) {
-		return $this->fieldMap[$fieldName];
+		return $this->fieldMaps[$fieldName];
 	}
 
 	/**
@@ -55,7 +66,7 @@ class MySQLIStatement extends \mysqli_stmt {
 	 */
 	 private function isMissingFieldMap($fieldMapCount) {
 		if ($fieldMapCount != $this->field_count)
-			throw new \RuntimeException ( "Missing field map. you must addFieldMap." );
+			throw new \RuntimeException ( "Missing field map. you must addFieldMap.\n ".(int)$this->field_count." has a fetch result field\nMap count: {$fieldMapCount}" );
 	}
 
 	/**
@@ -91,5 +102,23 @@ class MySQLIStatement extends \mysqli_stmt {
 		$result_meta->free ();
 
 		return $fieldMetas;
+	}
+
+	public function execute() {
+		parent::execute();
+
+		if($this->errno) {
+			$msg = DEBUG == true ? $this->error."\nquery: ".$this->query : $this->error;
+			throw new \mysqli_sql_exception($msg, $this->errno);
+		}
+	}
+
+	public function executeNonQuery() {
+		$this->execute();
+		$resut = $this->affected_rows;
+		$this->free_result();
+		$this->close();
+
+		return $resut;
 	}
 }

@@ -1,9 +1,7 @@
 <?php
 namespace classes\web\script;
 use classes\util\Assert;
-
 use classes\ui\ModelMap;
-
 use conf\Core;
 
 // http://grepcode.com/file/repo1.maven.org/maven2/org.springframework/spring-webmvc/2.5.1/org/springframework/web/servlet/ModelAndView.java
@@ -66,6 +64,9 @@ class ModelAndView implements View {
 	public function setOwner(View &$owner) {
 		$this->owner = $owner;
 	}
+	public function setContentType($contentType) {
+		$this->contentType = $contentType;
+	}
 	public function getContentType() {
 		return $this->contentType;
 	}
@@ -102,8 +103,6 @@ class ModelAndView implements View {
 	public function findViewFilePath($fileName) {
 		if (file_exists ( Core::DEFAULT_VIEW_PATH . $fileName ))
 			return Core::DEFAULT_VIEW_PATH . $fileName;
-		elseif ($fileName != "index.php")
-			throw new ViewNotFoundException("Can not reference perminator default file");
 		elseif (file_exists ( $fileName ))
 			return $fileName;
 		else

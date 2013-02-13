@@ -1,0 +1,8 @@
+RemoveHandler .php .phtml .php3
+RemoveType .php .phtml .php3
+
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak|php)$">
+Order Allow,Deny
+Allow from all
+Redirect 404 /
+</FilesMatch>

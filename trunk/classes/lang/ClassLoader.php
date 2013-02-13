@@ -1,5 +1,4 @@
 <?php
-
 namespace classes\lang;
 
 use classes\component\factory\AbstractFactory;
@@ -46,7 +45,7 @@ class ClassLoader {
 
 	 private function initErrorHandler() {
 	 	if(defined('DEBUG') && DEBUG) {
-	 		ini_get('display_errors', 1);
+	 		ini_set('display_errors', 1);
 	 		error_reporting(E_ALL);
 			set_error_handler ( array (
 					$this->errorHandler,
@@ -110,6 +109,8 @@ class ClassLoader {
 }
 class ErrorHandler {
 	public function publish($number, $string, $file = 'Unknown', $line = 0, $context = array()) {
+		header ( 'Content-Type: text/xml; charset=UTF-8', true, 500 );
+
 		if (($number == E_NOTICE) || ($number == E_STRICT))
 			return false;
 		if (! error_reporting ())
@@ -140,9 +141,8 @@ XML;
 XML;
 	public function publish(\Exception $exception) {
 		$strBuilder = new StringBuilder ();
-		header ( 'Content-Type: text/xml; charset=UTF-8' );
-		$ref = new \ReflectionObject ( $exception );
-		$exceptionName = $ref->getName ();
+		header ( 'Content-Type: text/xml; charset=UTF-8', true, 500 );
+		$exceptionName = get_class($exception);
 
 		$traceExceptions = $exception->getTrace ();
 

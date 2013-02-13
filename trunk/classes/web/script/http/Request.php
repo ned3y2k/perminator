@@ -59,10 +59,14 @@ class Request { // FIXME DataBinder와 연결 하는 작업 필요
 		}
 	}
 
-	public function getQueryString() {
+	public function getQueryString(array $excludeKeys = null) {
 		$query = "";
+
+		if(is_null($excludeKeys)) $excludeKeys = array();
+		$excludeKeys = array_merge(array('class', 'method'), $excludeKeys);
 		foreach ($this->parameters as $key => $value) {
-			$query .= "&{$key}={$value}";
+			if(!in_array($key, $excludeKeys))
+				$query .= "&{$key}={$value}";
 		}
 
 		return substr($query, 1);
