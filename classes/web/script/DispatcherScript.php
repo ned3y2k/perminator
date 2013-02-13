@@ -38,8 +38,9 @@ class DispatcherScript {
 		$className = $getReq->getParameter ( "class", null );
 		$className = str_replace('/', '\\', $className);
 
-		if ($className == null || $className == CoreConfig::ENTRY_SCRIPT)
+		if ($className == null || $className == CoreConfig::ENTRY_SCRIPT) {
 			$className = CoreConfig::DEFAULT_CONTROLLER;
+		}
 
 		$className = CoreConfig::CONTROLLER_NAMESPACE_PREFIX . $className;
 
@@ -52,6 +53,7 @@ class DispatcherScript {
 
 		$controllerInstanceRef = new \ReflectionObject ( $controller );
 
+		/* @var $methodRef \ReflectionMethod */
 		$methodRef = $controllerInstanceRef->getMethod ( $methodName );
 		$this->className = $className;
 		$this->methodLine = $methodRef->getStartLine ();
@@ -88,14 +90,23 @@ class DispatcherScript {
 
 		foreach ( $refParams as &$refParam ) {
 			/* @var $refParam \ReflectionParameter */
+
 			$type = $refParam->getClass ();
-			if ($type->implementsInterface ( 'classes\web\bind\meta\RequestParamCollection' )) {
+			if($refParam->isArray()) {
+				$paramInstance = Request::getInstance(Request::GET)->getParameters();
+			} elseif (is_null($type)) {
+				$paramInstance = Request::getInstance(Request::GET)->getParameter($refParam->getName(), $refParam->getDefaultValue());
+			} elseif ($type->implementsInterface ( 'classes\web\bind\meta\RequestParamCollection' )) {
 				$paramInstance = $classLoader->newInstance ( $refParam->getClass ()->name );
 				$this->bindRequestParam ( $paramInstance );
-			} elseif($type->getName() == 'classes\ui\ModelMap') {
+			} elseif($type->name == 'classes\ui\ModelMap') {
 				$paramInstance = new ModelMap();
 				array_push($this->modelMap, $paramInstance);
-			} else throw new \InvalidArgumentException ();
+			} else {
+				$dataBinder = new DataBinder();
+				$paramInstance = $classLoader->newInstance ( $refParam->getClass ()->name );
+				$dataBinder->binding($paramInstance, Request::getInstance(Request::POST)->getParameters());
+			}
 
 			array_push ( $params, $paramInstance );
 		}
@@ -119,8 +130,7 @@ class DispatcherScript {
 			$desInstance = new $className ();
 
 			$dataBinder->binding ( $desInstance, $this->getRequestData ( $reqParam->getMethod () ), $reqParam->isIncomplete () );
-			if ($reqParam->isRequired () && is_null ( $desInstance ))
-				throw new BeanInitializationException ( "{$this->className}[{$this->methodLine}]: {$reqParam->getClassName()} Required. but not ready" );
+			if ($reqParam->isRequired () && is_null ( $desInstance )) { throw new BeanInitializationException ( "{$this->className}[{$this->methodLine}]: {$reqParam->getClassName()} Required. but not ready" ); }
 			$reqParam->value = $desInstance;
 		}
 	}
@@ -148,14 +158,16 @@ class DispatcherScript {
 		}
 	}
 	public function printPage($page) {
-		if (! is_string ( $page ) && ! ($page instanceof View) && ! is_null ( $page ))
+		if (! is_string ( $page ) && ! ($page instanceof View) && ! is_null ( $page )) {
 			throw new \InvalidArgumentException ( "Return type is not View(Only accept a String or View or Null)" );
+		}
 
 		if (is_string ( $page ) || is_null ( $page )) {
 			$this->processRedirect($page);
 			$view = new ModelAndView ( $page );
-		} elseif ($page instanceof View)
+		} elseif ($page instanceof View) {
 			$view = &$page;
+		}
 
 		if($view instanceof ModelAndView && count($this->modelMap) > 0) {
 			$modelMap = new ModelMap();
@@ -172,8 +184,10 @@ class DispatcherScript {
 		echo $view->getContent ();
 	}
 	private function processRedirect($page) {
-		if(is_string($page) && substr_count($page, 'redirect:') > 0)
-			header("location:".substr($page, 9));
+		if(is_string($page) && substr_count($page, 'redirect:') > 0) {
+			header("Location:".substr($page, 9), true);
+			exit;
+		}
 	}
 }
 class BeanInitializationException extends \RuntimeException {
