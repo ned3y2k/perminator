@@ -1,9 +1,6 @@
 <?php
-
 namespace classes\web\script;
-
 use classes\ui\ModelMap;
-
 use app\controller\IndexController;
 use classes\web\bind\meta\RequestParamCollection;
 use classes\binder\DataBinder;
