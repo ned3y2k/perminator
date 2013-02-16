@@ -1,5 +1,4 @@
 <?php
-namespace classes\Meta;
+namespace classes\meta;
 
-interface Repository {
-}
+interface Repository {}
