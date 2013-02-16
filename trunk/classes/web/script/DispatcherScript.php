@@ -8,7 +8,7 @@ use app\controller\IndexController;
 use classes\web\bind\meta\RequestParamCollection;
 use classes\binder\DataBinder;
 use conf\Core as CoreConfig;
-use classes\Meta\Controller;
+use classes\meta\Controller;
 use classes\lang\ClassLoader;
 use classes\support\Factory;
 use classes\web\bind\meta\RequestParam;
