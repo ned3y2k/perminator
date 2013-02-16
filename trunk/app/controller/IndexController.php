@@ -1,6 +1,10 @@
 <?php
 namespace app\controller;
-use classeswebscriptModelAndView;use appmodelMember;use classeswebbindmetaRequestParam;use classeswebbindmetaRequestParamCollection;use classesmetaController;
+use classes\web\script\ModelAndView;
+use app\model\Member;
+use classes\web\bind\meta\RequestParam;
+use classes\web\bind\meta\RequestParamCollection;
+use classes\meta\Controller;
 
 class MemberRequestParamCollection implements RequestParamCollection {
 	private $paramMap = array ();
