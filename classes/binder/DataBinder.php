@@ -1,5 +1,4 @@
 <?php
-
 namespace classes\binder;
 
 use classes\web\script\http\Request;
@@ -14,9 +13,9 @@ class DataBinder {
 		else
 			throw new \InvalidArgumentException ( 'setter prefix는 string type만 허용' );
 
-		if (is_string ( $keyNamePrefix ))
+		if (is_string ( $keyNamePrefix )) {
 			$this->keyNamePrefix = $keyNamePrefix;
-		else
+		} else
 			throw new \InvalidArgumentException ( 'variable name prefix는 string type만 허용' );
 	}
 
@@ -28,13 +27,13 @@ class DataBinder {
 	 * @param string $setterPrefix
 	 * @throws DataBindingException
 	 */
-	public function binding(&$desInstance, &$srcData, $incomplete = true) {
+	public function binding($desInstance, $srcData, $incomplete = true) {
 		if (! is_object ( $desInstance ))
 			throw new DataBindingException ( "First Argument passed must be of type object." );
 
-		if (is_bool ( $incomplete ))
+		if (is_bool ( $incomplete )) {
 			$this->incomplete = $incomplete;
-		else
+		} else
 			throw new \InvalidArgumentException ( 'incomplete 값은 bool type만 허용' );
 
 		$objectRef = new \ReflectionObject ( $desInstance );
@@ -43,7 +42,7 @@ class DataBinder {
 		if ($srcData instanceof Request) {
 			$requestValue = $srcData->getParameters ();
 			$this->instanceFromAssociativeArray ( $desInstance, $props, $requestValue );
-		} elseif (is_array ( $srcData )) {
+		} elseif (gettype  ( $srcData )) {
 			$this->instanceFromAssociativeArray ( $desInstance, $props, $srcData );
 		} else {
 			throw new DataBindingException ( "Second Argument Passed Must be of Type Associative Array." );
@@ -56,9 +55,9 @@ class DataBinder {
 
 			$keyName = $this->keyNamePrefix . $prop->name;
 			if ($prop->isPublic ()) {
-				if (array_key_exists ( $keyName, $data ))
+				if (array_key_exists ( $keyName, $data )) {
 					$prop->setValue ( $desInstance, $data [$keyName] );
-				elseif (! $this->incomplete) {
+				} elseif (! $this->incomplete) {
 					$desInstance = null;
 					break;
 				}
@@ -84,8 +83,7 @@ class DataBinder {
 		return $name;
 	}
 	private function existSetter($setterName, $desInstance) {
-		$refObject = new \ReflectionObject ( $desInstance );
-		return $refObject->hasMethod ( $setterName );
+		return method_exists($desInstance, $setterName);
 	}
 }
 class DataBindingException {
