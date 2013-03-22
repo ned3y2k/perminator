@@ -12,6 +12,8 @@ use classes\web\bind\meta\RequestParam;
 use classes\lang\ClassNotFoundException;
 use classes\web\script\http\Request;
 
+require_once 'conf/MappingExceptionResolver.php';
+
 /**
  * FIXME DispatcherScript에서 BeanDependencyInjector와의 분리가 필요
  * @author User
@@ -55,7 +57,15 @@ class DispatcherScript {
 		$this->className = $className;
 		$this->methodLine = $methodRef->getStartLine ();
 
-		$this->printPage ( $methodRef->invokeArgs ( $controller, $this->injectParams ( $methodRef->getParameters () ) ) );
+		try {
+			$controllerResult = $methodRef->invokeArgs ( $controller, $this->injectParams ( $methodRef->getParameters () ) );
+		} catch (\Exception $ex) {
+			global $MappingExceptionResolver;
+			var_dump($MappingExceptionResolver[get_class($ex)]);
+			exit;
+			throw $ex;
+		}
+		$this->printPage ( $controllerResult );
 	}
 
 	private function createControllerInstance($controllerClassRef) {
@@ -92,7 +102,8 @@ class DispatcherScript {
 			if($refParam->isArray()) {
 				$paramInstance = Request::getInstance(Request::GET)->getParameters();
 			} elseif (is_null($type)) {
-				$paramInstance = Request::getInstance(Request::GET)->getParameter($refParam->getName(), $refParam->getDefaultValue());
+				$defaultValue = $refParam->isDefaultValueAvailable() ? $refParam->getDefaultValue() : null;
+				$paramInstance = Request::getInstance(Request::GET)->getParameter($refParam->getName(), $defaultValue);
 			} elseif ($type->implementsInterface ( 'classes\web\bind\meta\RequestParamCollection' )) {
 				$paramInstance = $classLoader->newInstance ( $refParam->getClass ()->name );
 				$this->bindRequestParam ( $paramInstance );
