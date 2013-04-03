@@ -1,48 +1,33 @@
 <?php
 namespace app\controller;
-use classes\web\script\ModelAndView;
+use classes\ui\ModelMap;
 use app\model\Member;
-use classes\web\bind\meta\RequestParam;
-use classes\web\bind\meta\RequestParamCollection;
-use classes\meta\Controller;
+use classes\stereotype\Controller;
+use classes\content\Context;
 
-class MemberRequestParamCollection implements RequestParamCollection {
-	private $paramMap = array ();
-	public function __construct() {
-		$this->paramMap ["member"] = new RequestParam ( 'app\model\Member', RequestParam::METHOD_GET, true );
-	}
-	public function &getRequestParams() {
-		return $this->paramMap;
-	}
-
-	/**
-	 *
-	 * @return Member
-	 */
-	public function getMember() {
-		return $this->paramMap ["member"]->value;
-	}
-
-	/*
-	 * (non-PHPdoc) @see
-	 * \classes\web\bind\meta\RequestParamCollection::getKeyNamePrefix()
-	 */
-	public function getKeyNamePrefix() {
-		return "";
-	}
-}
+/**
+ * @author 경대
+ *
+ */
 class IndexController implements Controller {
-	public function index() {
+	private $context;
+
+	public function index($no) {
 		return "index.php";
 	}
-	public function saveMember(MemberRequestParamCollection $paramColl) {
-		$member = $paramColl->getMember ();
 
-		$view = new ModelAndView ( "memberShow.php" );
-		$modelMap ["member"] = $paramColl->getMember ();
-		$view->setModelMap ( $modelMap );
-		return $view;
+	public function indexPost($no) {
+		echo $no;
+	}
+
+	public function saveMember(ModelMap $map, $id = null, $name = null,
+			$password = null) {
+		$member = new Member($id, $name, $password);
+		$map->addAttribute('member', $member);
+		return "memberShow.php";
+	}
+
+	public function setContext(Context $context) {
+		$this->context = $context;
 	}
 }
-
-?>

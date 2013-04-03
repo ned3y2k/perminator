@@ -1,8 +1,3 @@
 <?php
 namespace classes\lang;
-
-class ClassNotFoundException extends \RuntimeException {
-
-}
-
-?>
+class ClassNotFoundException extends \RuntimeException {}

@@ -1,4 +1,4 @@
 <?php
-namespace classes\meta;
+namespace classes\stereotype;
 
 interface Repository {}
