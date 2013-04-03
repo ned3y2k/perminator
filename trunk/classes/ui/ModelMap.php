@@ -8,7 +8,7 @@ class ModelMap {
 	private $map;
 
 	public function __construct() {
-		if(is_array(func_get_arg(0)))
+		if(func_num_args() > 0)
 			$this->map = func_get_arg(0);
 		else
 			$this->map = array();
@@ -52,7 +52,7 @@ class ModelMap {
 
 	public function get($attributeName) {
 		Assert::notNull($attributeName, "Model attribute name must not be null");
-		Assert::arrayNotHasKey($attributeName, $this->map, "this Model the not has Key.");
+		Assert::arrayNotHasKey($attributeName, $this->map, "this Model the not has '{$attributeName}'.");
 
 		return $this->map[$attributeName];
 	}

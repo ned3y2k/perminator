@@ -1,1 +1,4 @@
-<a href="/IndexController.saveMember?id=michale&password=jackson&name=고인">dd</a>
+<form method="post">
+	<input name="name" value="12"><br />
+	<input type="submit">
+</form>

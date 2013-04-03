@@ -14,19 +14,17 @@ class ModelAndView implements View {
 	public function __construct($view, $modelMap = null, $contentType = null) {
 		$this->setView ( $view );
 
-		if (! is_null ( $modelMap ))
+		if (! is_null ( $modelMap )) {
 			if(is_array($modelMap))
 				$this->modelMap = new ModelMap($modelMap);
 			elseif($modelMap instanceof ModelMap)
 				$this->modelMap = $modelMap;
-		else
-			$this->modelMap = new ModelMap();
+		} else $this->modelMap = new ModelMap();
 
-		if (is_null ( $contentType ))
-			if ($view instanceof View)
-				$this->contentType = $contentType;
-			else
-				$contentType = "text/html; charset=" . Core::DEFAULT_CHARSET;
+		if (is_null ( $contentType )) {
+			if ($view instanceof View) $this->contentType = $contentType;
+			else $contentType = "text/html; charset=" . Core::DEFAULT_CHARSET;
+		}
 
 		$this->contentType = $contentType;
 	}
@@ -42,21 +40,24 @@ class ModelAndView implements View {
 			$this->content = $view;
 		} elseif (is_string ( $view ))
 			$this->content = $view;
-		elseif (is_null ( $view ))
+		elseif (is_null ( $view )) {
 			$this->content = null;
-		else
+		}
+		else {
 			throw new \InvalidArgumentException ( "only accepts string or " . __NAMESPACE__ . "\\View" );
+		}
 	}
 	public function setModelMap($modelMap) {
 		unset ( $this->modelMap );
 		Assert::notNull($modelMap, "modelMap must not be null");
 
-		if(is_array($modelMap))
+		if(is_array($modelMap)) {
 			$this->modelMap = new ModelMap($modelMap);
-		elseif($modelMap instanceof ModelMap)
+		} elseif($modelMap instanceof ModelMap) {
 			$this->modelMap = $modelMap;
-		else
+		} else {
 			throw new \InvalidArgumentException ( "Invalid ModelMap" );
+		}
 	}
 	public function addValue($name, $value) {
 		$this->modelMap->addAttribute($name, $value);
@@ -101,11 +102,10 @@ class ModelAndView implements View {
 		return $this->modelMap->get($name);
 	}
 	public function findViewFilePath($fileName) {
-		if (file_exists ( Core::DEFAULT_VIEW_PATH . $fileName ))
+		if (file_exists ( Core::DEFAULT_VIEW_PATH . $fileName )) {
 			return Core::DEFAULT_VIEW_PATH . $fileName;
-		elseif (file_exists ( $fileName ))
+		} elseif (file_exists ( $fileName )) {
 			return $fileName;
-		else
-			throw new ViewNotFoundException ( $fileName );
+		} else { throw new ViewNotFoundException ( $fileName ); }
 	}
 }

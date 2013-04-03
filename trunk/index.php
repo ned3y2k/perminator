@@ -1,5 +1,5 @@
 <?php
-define('DEBUG', true);
+define('DEBUG', false);
 
 use classes\web\script\DispatcherScript;
 use classes\lang\ClassLoader;
