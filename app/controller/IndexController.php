@@ -13,7 +13,7 @@ class IndexController implements Controller {
 	private $context;
 
 	public function index($no) {
-		return "index.php";
+		// return "index.php";
 	}
 
 	public function indexPost($no) {
