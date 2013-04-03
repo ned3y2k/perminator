@@ -109,7 +109,7 @@ class JsonResolver implements RequestResolver {
 			$method = $this->findMethod($reqParam);
 
 			$defaultValue = $this->findDefaultValue($reqParam, $refParam);
-			$reqParamName = $this->findReqParamName();
+			$reqParamName = $this->findReqParamName($paramName, $reqParam);
 
  			if($refParam->isArray()) {
 				$paramInstance = Request::getInstance($method)->getParameters();
@@ -158,6 +158,10 @@ class JsonResolver implements RequestResolver {
 		$defaultValue = $refParam->isDefaultValueAvailable() ? $refParam->getDefaultValue() : $defaultValue;
 
 		return $defaultValue;
+	}
+	private function findReqParamName($paramName, $reqParam) {
+		$reqParamArray = get_object_vars($reqParam);
+		return array_key_exists("value", $reqParamArray) ? $reqParamArray['value'] : $paramName;
 	}
 	private function bindRequestParam(\classes\web\bind\meta\RequestParamCollection &$reqParamCollection) {
 		$requestParams = &$reqParamCollection->getRequestParams ();
