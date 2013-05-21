@@ -13,11 +13,12 @@ class IndexController implements Controller {
 	private $context;
 
 	public function index($no) {
-		// return "index.php";
+		return "index.php";
 	}
 
-	public function indexPost($no) {
-		echo $no;
+	public function indexPost(ModelMap $map ,$no) {
+		$map->addAttribute("no", $no);
+		return "result.php";
 	}
 
 	public function saveMember(ModelMap $map, $id = null, $name = null,
