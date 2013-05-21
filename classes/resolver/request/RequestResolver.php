@@ -9,4 +9,6 @@ interface RequestResolver {
 	 * @throws \Exception
 	 */
 	public function resolve(Context $context);
+
+	public function findAllModelMap();
 }

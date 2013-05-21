@@ -15,6 +15,7 @@ class JsonResolver implements RequestResolver {
 	private $context;
 	private $uri;
 	private $requestMap;
+	private $modelMaps = array();
 
 	private function findRequestMapping($requestMethod, $name) {
 		static $config = null;
@@ -42,6 +43,10 @@ class JsonResolver implements RequestResolver {
 		} catch (\Exception $ex) {
 			throw $ex;
 		}
+	}
+
+	public function findAllModelMap() {
+		return $this->modelMaps;
 	}
 
 	private function fillContextFullClassName() {
@@ -89,56 +94,62 @@ class JsonResolver implements RequestResolver {
 		$this->context->invokeMethodLine = $methodRef->getStartLine ();
 
 		try {
-			$controllerResult = $methodRef->invokeArgs ( $context->controllerInstance, $this->injectParams ( $methodRef->getParameters () ) );
+			$controllerResult = $methodRef->invokeArgs ( $context->controllerInstance, $this->lookupParams ( $methodRef->getParameters () ) );
 		} catch (\Exception $ex) {
 			throw $ex;
 		}
 
 		return $controllerResult;
 	}
-	private function injectParams(array $refParams) {
+	private function lookupParams(array $refParamRefs) {
 		$params = array ();
 		$classLoader = $this->context->classLoader;
 
-		foreach ( $refParams as &$refParam ) {
-			/* @var $reqParam \ReflectionParameter */
+		foreach ( $refParamRefs as &$refParam ) {
+			/* @var $refParam \ReflectionParameter */
 
 			$type = $refParam->getClass ();
-			$paramName = $refParam->getName();
-			$reqParam = $this->requestMap->params->$paramName;
-			$method = $this->findMethod($reqParam);
 
-			$defaultValue = $this->findDefaultValue($reqParam, $refParam);
-			$reqParamName = $this->findReqParamName($paramName, $reqParam);
+			$paramName = $refParam->getName();
+			$webReqParam = property_exists($this->requestMap->params, $paramName) ? $this->requestMap->params->$paramName : null;
+			$method = is_null($webReqParam) ? null : $this->findWebReqMethod($webReqParam);
+
+			$defaultValue = $this->findDefaultValue($webReqParam, $refParam);
+			$reqParamName = $this->findReqParamName($paramName, $webReqParam);
 
  			if($refParam->isArray()) {
 				$paramInstance = Request::getInstance($method)->getParameters();
 			} elseif (is_null($type)) {
 				$paramInstance = Request::getInstance($method)->getParameter($reqParamName, $defaultValue);
 			} elseif ($type->implementsInterface ( '\classes\web\bind\meta\RequestParamCollection' )) {
-				$paramInstance = $classLoader->newInstance ( $refParam->getClass ()->name );
+				$paramInstance = $classLoader->newInstance ( $type->name );
 				$this->bindRequestParam ( $paramInstance );
 			} elseif($type->name == 'classes\ui\ModelMap') {
 				$paramInstance = new ModelMap();
-				array_push($this->modelMap, $paramInstance);
+				array_push($this->modelMaps, $paramInstance);
 			} else {
 				$dataBinder = new DataBinder();
-				$paramInstance = $classLoader->newInstance ( $refParam->getClass ()->name );
+				$paramInstance = $classLoader->newInstance ( $type->name );
 				$dataBinder->binding($paramInstance, Request::getInstance($method)->getParameters());
 			}
 
-			if($reqParam->require && $paramInstance == null) throw new BeanInitializationException ( "{$this->context->invokeClassName}[{$this->context->invokeMethodLine}]: {$reqParam->getClassName()} Required. but not ready" );
+			if(!$this->isAutoWiredObject($type) && $webReqParam->require && $paramInstance == null) throw new BeanInitializationException ( "{$this->context->invokeClassName}[{$this->context->invokeMethodLine}]: {$webReqParam->getClassName()} Required. but not ready" );
 			array_push ( $params, $paramInstance );
 		}
 
 		return $params;
 	}
-	private function findMethod($reqParam) {
-		$reqParamArray = get_object_vars($reqParam);
-		$methodString = array_key_exists("method", $reqParamArray) ? $reqParamArray['method'] : $this->context->requestMethod;
-		return $this->makeMethodTypeFromString($methodString);
+	private function isAutoWiredObject(\ReflectionClass $type = null) {
+		if(is_null($type)) return false;
+		elseif('classes\ui\ModelMap' == $type->name || 'classes\web\bind\meta\RequestParamCollection' == $type->name) return true;;
+		return false;
 	}
-	private function makeMethodTypeFromString($string) {
+	private function findWebReqMethod($webReqParam) {
+		$reqParamArray = get_object_vars($webReqParam);
+		$methodString = array_key_exists("method", $reqParamArray) ? $reqParamArray['method'] : $this->context->requestMethod;
+		return $this->makeWebReqMethodTypeFromString($methodString);
+	}
+	private function makeWebReqMethodTypeFromString($string) {
 		switch (strtoupper($string)) {
 			case "GET":
 				return Request::GET;
@@ -153,14 +164,18 @@ class JsonResolver implements RequestResolver {
 		}
 	}
 	private function findDefaultValue($reqParam, $refParam) {
-		$reqParamArray = get_object_vars($reqParam);
+		$reqParamArray = is_null($reqParam) ? null : get_object_vars($reqParam);
+		if(is_null($reqParamArray)) return null;
+
 		$defaultValue = array_key_exists('default', $reqParamArray) ? $reqParamArray['default'] : null;
 		$defaultValue = $refParam->isDefaultValueAvailable() ? $refParam->getDefaultValue() : $defaultValue;
 
 		return $defaultValue;
 	}
 	private function findReqParamName($paramName, $reqParam) {
-		$reqParamArray = get_object_vars($reqParam);
+		$reqParamArray = is_null($reqParam) ? null : get_object_vars($reqParam);
+		if(is_null($reqParam)) return null;
+
 		return array_key_exists("value", $reqParamArray) ? $reqParamArray['value'] : $paramName;
 	}
 	private function bindRequestParam(\classes\web\bind\meta\RequestParamCollection &$reqParamCollection) {
