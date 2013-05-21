@@ -1,6 +1,5 @@
 <?php
 namespace lib;
-use classes\util\ViewUtil;
 
 abstract class PageBuilder {
 	protected $header;
