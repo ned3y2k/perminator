@@ -1,0 +1,1 @@
+input no: <?=$this->get("no")?>
