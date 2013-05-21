@@ -25,8 +25,6 @@ class ClassLoader {
 	private $objectFactory;
 	public function __construct() {
 		global $incPath;
-		$this->exceptionHandler = new ExceptionHandler ();
-		$this->errorHandler = new ErrorHandler ();
 
 		spl_autoload_register ( array (
 				$this,
@@ -35,29 +33,11 @@ class ClassLoader {
 		$this->includePaths = explode ( PATH_SEPARATOR, get_include_path () );
 		$this->includePaths = array_merge ( $incPath, $this->includePaths );
 
-		$this->initErrorHandler ();
-
 		$this->includedClasses = array ();
 
 		$this->classAliasRepository = new ClassAliasRepository ();
 		$this->objectFactory = new AbstractFactory ( $this );
 	}
-
-	 private function initErrorHandler() {
-	 	if(defined('DEBUG') && DEBUG) {
-	 		ini_set('display_errors', 1);
-	 		error_reporting(E_ALL);
-			set_error_handler ( array (
-					$this->errorHandler,
-					"publish"
-			) );
-			set_exception_handler ( array (
-					$this->exceptionHandler,
-					"publish"
-			) );
-	 	}
-	}
-
 
 	/**
 	 *
@@ -105,87 +85,5 @@ class ClassLoader {
 		if (!is_null(self::$instance) && is_object(self::$instance))
 			self::$instance = new ClassLoader ();
 		return self::$instance = new ClassLoader ();
-	}
-}
-class ErrorHandler {
-	public function publish($number, $string, $file = 'Unknown', $line = 0, $context = array()) {
-		header ( 'Content-Type: text/xml; charset=UTF-8', true, 500 );
-
-		if (($number == E_NOTICE) || ($number == E_STRICT))
-			return false;
-		if (! error_reporting ())
-			return false;
-
-			// FIXME ErrorHandler 에러 페이지 처리 필요
-		return true;
-	}
-}
-class ExceptionHandler {
-	const XML_WRAPPER = <<< XML
-<?xml version="1.0" encoding="UTF-8"?>
-<Exception type="%s">
-	<Message>%s</Message>
-	<File>%s</File>
-	<Code>%s</Code>
-	<Line>%s</Line>
-	<TraceStacks>
-		%s
-	</TraceStacks>
-</Exception>
-XML;
-	const TRACE = <<< XML
-<TraceStack Class="%s" Function="%s" Line="%s">
-	<File>%s</File>
-	<Args>%s</Args>
-</TraceStack>
-XML;
-	public function publish(\Exception $exception) {
-		$strBuilder = new StringBuilder ();
-		header ( 'Content-Type: text/xml; charset=UTF-8', true, 500 );
-		$exceptionName = get_class($exception);
-
-		$traceExceptions = $exception->getTrace ();
-
-		foreach ( $traceExceptions as $traceException ) {
-			$argsBuilder = new StringBuilder ();
-
-			$index = -1;
-			if (array_key_exists ( $traceException, $traceException ))
-				$index = count ( $traceException ['args'] );
-			for($i = 0; $i < $index; $i ++) {
-				$arg = $traceException ['args'] [$i];
-				$ref = new \ReflectionObject ( $arg );
-
-				if (is_object ( $arg )) {
-					$argsBuilder->append ( "<Arg{$i} Class=\"{$ref->getName()}\">" );
-
-					foreach ( $arg as $key => $value ) {
-						$argsBuilder->append ( "<{$key}>" );
-						$argsBuilder->append ( $value );
-						$argsBuilder->append ( "</{$key}>" );
-					}
-					$argsBuilder->append ( "</Arg{$i}>" );
-				} elseif (! is_array ( $arg )) {
-					$argsBuilder->append ( "<Arg{$i}>" );
-					$argsBuilder->append ( $arg );
-					$argsBuilder->append ( "</Arg{$i}>" );
-				}
-			}
-
-			// [file] =>
-			// E:\Zend\SolarMonitor\solarmonitor\classes\service\ApartmentServiceImpl.php
-			// [line] => 44
-			// [function] => getLatest
-			// [class] =>
-			// solarmonitor\classes\repository\apartment\ApartmentLogRepository
-			// [type] => ->
-			// [args] => Array
-
-			$strBuilder->append ( sprintf ( self::TRACE, @$traceException ['class'], @$traceException ['function'], @$traceException ['line'], @$traceException ['file'], $argsBuilder->toString () ) );
-		}
-
-		printf ( self::XML_WRAPPER, $exceptionName, $exception->getMessage (), $exception->getFile (), $exception->getCode (), $exception->getLine (), $strBuilder->toString () );
-	}
-	private function argmentsToXml($args) {
 	}
 }

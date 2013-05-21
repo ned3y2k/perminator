@@ -13,6 +13,7 @@ use classes\ui\ModelMap;
 
 class ClassNameAndMethodNameResolver implements RequestResolver {
 	private $context;
+	private $modelMaps = array();
 
 	public function resolve(Context $context) {
 		$this->context = $context;
@@ -42,6 +43,10 @@ class ClassNameAndMethodNameResolver implements RequestResolver {
 
 		$controllerInstance->setContext($context);
 		return $controllerInstance;
+	}
+
+	public function findAllModelMap() {
+		return $this->modelMaps;
 	}
 
 	private function createControllerInstance($controllerClassRef) {
@@ -77,7 +82,7 @@ class ClassNameAndMethodNameResolver implements RequestResolver {
 		$this->context->invokeMethodLine = $methodRef->getStartLine ();
 
 		try {
-			$controllerResult = $methodRef->invokeArgs ( $context->controllerInstance, $this->injectParams ( $methodRef->getParameters () ) );
+			$controllerResult = $methodRef->invokeArgs ( $context->controllerInstance, $this->lookupParams ( $methodRef->getParameters () ) );
 		} catch (\Exception $ex) {
 			throw $ex;
 		}
@@ -85,7 +90,7 @@ class ClassNameAndMethodNameResolver implements RequestResolver {
 		return $controllerResult;
 	}
 
-	private function injectParams(array $refParams) {
+	private function lookupParams(array $refParams) {
 		$params = array ();
 		$classLoader = $this->context->classLoader;
 
@@ -103,7 +108,7 @@ class ClassNameAndMethodNameResolver implements RequestResolver {
 				$this->bindRequestParam ( $paramInstance );
 			} elseif($type->name == 'classes\ui\ModelMap') {
 				$paramInstance = new ModelMap();
-				array_push($this->modelMap, $paramInstance);
+				array_push($this->modelMaps, $paramInstance);
 			} else {
 				$dataBinder = new DataBinder();
 				$paramInstance = $classLoader->newInstance ( $refParam->getClass ()->name );
