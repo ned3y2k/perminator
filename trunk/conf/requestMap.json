@@ -1,4 +1,5 @@
 {
+	"*": {},
 	"GET": {
 		"index" : {
 			"className" : "IndexController",

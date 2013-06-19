@@ -1,11 +1,11 @@
 <?php
 namespace classes\component\factory;
 
-use classes\lang\ClassLoader;
+use classes\lang\PerminatorClassLoader;
 
 class AbstractFactory {
 	private $classLoader;
-	public function __construct(ClassLoader $classLoader) {
+	public function __construct(PerminatorClassLoader $classLoader) {
 		$this->classLoader = $classLoader;
 	}
 

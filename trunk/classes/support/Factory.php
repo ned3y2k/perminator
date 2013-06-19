@@ -2,11 +2,11 @@
 
 namespace classes\support;
 
-use classes\lang\ClassLoader;
+use classes\lang\PerminatorClassLoader;
 
 class Factory {
 	private $classLoader;
-	public function __construct(ClassLoader $classLoader) {
+	public function __construct(PerminatorClassLoader $classLoader) {
 		$this->classLoader = $classLoader;
 	}
 

@@ -10,7 +10,11 @@ use classes\web\bind\meta\RequestParam;
 use classes\binder\DataBinder;
 use classes\web\script\BeanInitializationException;
 use classes\ui\ModelMap;
-
+/**
+ *
+ * @author 경대
+ * @todo method *이 있는 경우 처리
+ */
 class JsonResolver implements RequestResolver {
 	private $context;
 	private $uri;
