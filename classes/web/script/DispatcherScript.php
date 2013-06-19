@@ -1,7 +1,7 @@
 <?php
 namespace classes\web\script;
 use classes\ui\ModelMap;
-use classes\lang\ClassLoader;
+use classes\lang\PerminatorClassLoader;
 use classes\content\Context;
 use conf\Resolver;
 use classes\lang\StringBuilder;
@@ -19,7 +19,7 @@ class DispatcherScript {
 		$this->initErrorHandler ();
 
 		$context = $this->context = new Context();
-		$context->classLoader = ClassLoader::getClassLoader ();
+		$context->classLoader = PerminatorClassLoader::getClassLoader ();
 
 		$requestResolverClassName = Resolver::REQUEST_RESOLVER;
 		$requestResolver = new $requestResolverClassName();

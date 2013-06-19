@@ -4,11 +4,9 @@ namespace classes\lang;
 use classes\component\factory\AbstractFactory;
 use classes\support\ClassAliasRepository;
 
-if (! defined ( 'NIL' ))
-	define ( 'NIL', null );
-
-	// require_once $_SERVER ['DOCUMENT_ROOT'] . '/perminator.inc.php';
-require_once 'perminator.inc.php';
+if (! defined ( 'NIL' )) define ( 'NIL', null );
+// require_once $_SERVER ['DOCUMENT_ROOT'] . '/perminator.inc.php';
+require_once 'perminator.conf.php';
 // require_once 'LoadedClassMeta.php';
 
 /**
@@ -17,7 +15,7 @@ require_once 'perminator.inc.php';
  * @author User
  *         Perminator Class Loader
  */
-class ClassLoader {
+class PerminatorClassLoader {
 	private static $instance = NIL;
 	private $includePaths;
 	private $includedClasses;
@@ -83,7 +81,12 @@ class ClassLoader {
 	 */
 	public static function getClassLoader() {
 		if (!is_null(self::$instance) && is_object(self::$instance))
-			self::$instance = new ClassLoader ();
-		return self::$instance = new ClassLoader ();
+			self::$instance = new PerminatorClassLoader ();
+
+		if(!array_key_exists('DOCUMENT_ROOT', $_SERVER)) {
+			chdir(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR);
+			$_SERVER["DOCUMENT_ROOT"] = getcwd();
+		}
+		return self::$instance = new PerminatorClassLoader ();
 	}
 }
