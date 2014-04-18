@@ -8,6 +8,7 @@ require_once 'lib/classes/web/script/DispatcherScript.php';
 $runtimeDebug = false;
 
 use classes\web\script\DispatcherScript;
+use classes\lang\PerminatorClassLoader;
 
 if(isset($_SERVER) && is_array($_SERVER) && array_key_exists('DOCUMENT_ROOT', $_SERVER)) {
 	error_reporting(E_ALL);
@@ -28,8 +29,10 @@ if(isset($_SERVER) && is_array($_SERVER) && array_key_exists('DOCUMENT_ROOT', $_
 }
 require_once 'loader.php';
 
-if(!TEST) set_include_path(APP_ROOT);
-
-$Dispatcher = new DispatcherScript();
-$Dispatcher->doDispatch(Context::getSharedContext());
-
+if(!TEST) {
+	set_include_path(APP_ROOT);
+	$Dispatcher = new DispatcherScript();
+	$Dispatcher->doDispatch(Context::getSharedContext());
+} else {
+	PerminatorClassLoader::getClassLoader(Context::getSharedContext());
+}
