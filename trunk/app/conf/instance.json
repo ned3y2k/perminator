@@ -1,0 +1,13 @@
+{
+	"smsSender": {
+		"class": "classes.dictionary.SiteEnvironmentDic",
+		"constructor": {
+			"name": "siteEnvironmentDic",
+			"@ref": "siteEnvironmentDic"
+		},
+		"property": {},
+		"scope": "session"
+	},
+
+	"siteEnvironmentDic": { "class": "classes.dictionary.SiteEnvironmentDic" }
+}

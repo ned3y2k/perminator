@@ -1,0 +1,33 @@
+{
+	"*": {},
+	"GET": {
+		"index" : {
+			"className" : "IndexController",
+			"methodName" : "index",
+			"params" : {
+				"no" : {
+					"method" : "GET",
+					"require" : true,
+					"value" : "no",
+					"default": "1234"
+				}
+			}
+		}
+	},
+	"POST": {
+		"index" : {
+			"className" : "IndexController",
+			"methodName" : "indexPost",
+			"params" : {
+				"no" : {
+					"method" : "POST",
+					"value" : "name",
+					"require" : true,
+					"default": "1234"
+				}
+			}
+		}
+	},
+	"HEAD": {},
+	"PUT": {}
+}
