@@ -12,4 +12,5 @@ class Core {
 	const CACHE_MANAGER_CLASS = '\classes\cache\APCCacheManager';
 	const EXCEPTION_HANDLER = '\classes\trouble\ExceptionHandler';
 	const EXCEPTION_PRINTER = '\classes\trouble\printer\XMLExceptionPrinter';
+	const REQUEST_MAP_GENERATE = true;
 }

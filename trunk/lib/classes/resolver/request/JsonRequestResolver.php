@@ -154,7 +154,7 @@ class JsonRequestResolver implements RequestResolver {
 				$dataBinder->binding($paramInstance, Request::getInstance($method)->getParameters());
 			}
 
-			$require = property_exists($webReqParam, 'require') ? $webReqParam->require : false;
+			$require = !is_null($webReqParam) && property_exists($webReqParam, 'require') ? $webReqParam->require : false;
 
 			if(!$this->isAutoWiredObject($type) && $require && $paramInstance == null) throw new BeanInitializationException( "{$this->context->invokeClassName}[{$this->context->invokeMethodLine}]: {$webReqParam->getClassName()} Required. but not ready" );
 			array_push ( $params, $paramInstance );

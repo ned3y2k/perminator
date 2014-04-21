@@ -1,5 +1,5 @@
 <?php
-use classes\context\ComponentScanner;
+use classes\context\support\ComponentScanner;
 use classes\io\scanner\RecursiveFileScanner;
 use classes\io\scanner\RecursiveFileFilter;
 require_once 'PHPUnit/Framework/TestCase.php';
