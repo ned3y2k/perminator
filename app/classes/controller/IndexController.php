@@ -5,12 +5,14 @@ use classes\model\Member;
 use classes\stereotype\Controller;
 use classes\web\script\ModelAndView;
 use classes\context\Context;
+use classes\stereotype\AutowiredBeansOwnedController;
+use classes\stereotype\RequestMapOwnedController;
 
 /**
  * @author 경대
  *
  */
-class IndexController implements Controller {
+class IndexController implements Controller, AutowiredBeansOwnedController, RequestMapOwnedController {
 	private $context;
 
 	public function index($no) {
@@ -35,5 +37,12 @@ class IndexController implements Controller {
 
 	public function setContext(Context $context) {
 		$this->context = $context;
+	}
+
+	public static function createRequestMap(\classes\context\Context $context) {
+	}
+
+	public static function createAutowiredBeanMap(\classes\context\Context $context) {
+
 	}
 }

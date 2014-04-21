@@ -1,5 +1,5 @@
 <?php
-namespace classes\context;
+namespace classes\context\support;
 
 use classes\io\scanner\RecursiveFileScanner;
 use classes\io\scanner\RecursiveFileFilter;
