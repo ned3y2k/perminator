@@ -1,4 +1,6 @@
 <?php
 namespace classes\stereotype;
 
-interface Repository {}
+interface Repository extends Component {
+
+}

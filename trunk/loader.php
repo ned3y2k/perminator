@@ -1,12 +1,6 @@
 <?php
 use classes\trouble\exception\core\PHPScriptNotFoundException;
-function rectify_file_path($path) {
-	if(PHP_OS == "WINNT") {
-		return str_replace ( "/", DIRECTORY_SEPARATOR, $path );
-	} else {
-		return str_replace ( "\\", DIRECTORY_SEPARATOR, $path );
-	}
-}
+
 function load_lib($relativePath) {
 
 	$fileName = rectify_file_path ( $relativePath ) . ".php";
@@ -26,15 +20,25 @@ function load_lib($relativePath) {
 	throw new PHPScriptNotFoundException($fileName);
 }
 
-$appLibRootPath = APP_ROOT . 'app' . DIRECTORY_SEPARATOR;
-$systemLibRootPath = APP_ROOT . 'lib' . DIRECTORY_SEPARATOR;
-function find_script($relativePath) {
-	global $appLibRootPath, $systemLibRootPath;
+function rectify_file_path($path) {
+	if(PHP_OS == "WINNT") {
+		return str_replace ( "/", DIRECTORY_SEPARATOR, $path );
+	} else {
+		return str_replace ( "\\", DIRECTORY_SEPARATOR, $path );
+	}
+}
 
-	if (file_exists ( $path = $appLibRootPath . $relativePath )) {
-		return $path;
-	} elseif (file_exists ( $path = $systemLibRootPath . $relativePath )) {
-		return $path;
+$scriptRootPathList = array(
+		APP_ROOT . 'lib' . DIRECTORY_SEPARATOR,
+		APP_ROOT . 'app' . DIRECTORY_SEPARATOR
+);
+
+function find_script($relativePath) {
+	global $scriptRootPathList;
+
+	foreach ($scriptRootPathList as $scriptRootPath) {
+		if (file_exists ( $path = $scriptRootPath . $relativePath ))
+			return $path;
 	}
 
 	return null;

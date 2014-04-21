@@ -16,12 +16,13 @@ use classes\trouble\exception\core\StrictException;
 use classes\trouble\exception\core\RecoverableErrorException;
 use classes\trouble\exception\core\DeprecatedException;
 use classes\trouble\exception\core\UserDeprecatedException;
+use classes\context\Context;
 
 
 class ErrorHandler {
 	private $phpErrors = array();
 
-	public function publish($code, $message, $file, $line, \Context $context = null) {
+	public function publish($code, $message, $file, $line, Context $context = null) {
 
 		// error was suppressed with the @-operator
 		if (0 === error_reporting()) { return false;}

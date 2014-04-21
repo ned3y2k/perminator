@@ -9,12 +9,13 @@ use classes\binder\DataBinder;
 use classes\ui\ModelMap;
 use classes\trouble\exception\core\NotControllerException;
 use classes\trouble\exception\core\BeanInitializationException;
+use classes\context\Context;
 
 class ClassNameAndMethodNameResolver implements RequestResolver {
 	private $context;
 	private $modelMaps = array();
 
-	public function resolve(\Context $context) {
+	public function resolve(Context $context) {
 		$this->context = $context;
 
 		try {
