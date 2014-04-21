@@ -1,4 +1,6 @@
 <?php
+namespace classes\context;
+
 use classes\web\script\http\Request;
 class Context {
 	private $sharedInstances;

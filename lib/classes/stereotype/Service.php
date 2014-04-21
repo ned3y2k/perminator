@@ -2,8 +2,6 @@
 
 namespace classes\stereotype;
 
-interface Service {
-	public function getServiceName();
+interface Service extends Component {
 }
 
-?>

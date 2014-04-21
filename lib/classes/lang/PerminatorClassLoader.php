@@ -5,6 +5,7 @@ use classes\component\factory\AbstractFactory;
 use classes\support\ClassAliasRepository;
 use classes\trouble\exception\core\ClassNotFoundException;
 use classes\trouble\exception\core\PHPScriptNotFoundException;
+use classes\context\Context;
 
 // require_once $_SERVER ['DOCUMENT_ROOT'] . '/perminator.inc.php';
 require_once 'perminator.conf.php';
@@ -22,7 +23,7 @@ class PerminatorClassLoader {
 	private $classAliasRepository;
 	private $objectFactory;
 
-	public function __construct(\Context $context) {
+	public function __construct(Context $context) {
 		spl_autoload_register ( array ($this, "includeByClassName") );
 		$this->includePaths = array_merge ($context->getIncludePaths(), explode ( PATH_SEPARATOR, get_include_path () ) );
 
@@ -67,7 +68,7 @@ class PerminatorClassLoader {
 	 *
 	 * @return \classes\lang\PerminatorClassLoader
 	 */
-	public static function getClassLoader(\Context $context) {
+	public static function getClassLoader(Context $context) {
 		static $instance = null;
 
 		return is_null($instance) ? $instance = new self($context) : $instance;

@@ -5,6 +5,8 @@ RewriteRule ^(.*)files/(.*) files/$2 [L]
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^test.runner/(.*) test.runner.php?filePath=$1 [N,QSA,L]
 RewriteRule ^(.+) index.php?uri=$1 [N,QSA,L]
 </IfModule>
 

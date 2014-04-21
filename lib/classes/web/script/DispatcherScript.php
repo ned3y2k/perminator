@@ -5,6 +5,7 @@ use classes\lang\PerminatorClassLoader;
 use conf\Resolver;
 use classes\trouble\ExceptionHandler;
 use classes\trouble\ErrorHandler;
+use classes\context\Context;
 
 /**
  * FIXME DispatcherScript에서 BeanDependencyInjector와의 분리가 필요
@@ -14,7 +15,7 @@ use classes\trouble\ErrorHandler;
 class DispatcherScript {
 	private $context;
 
-	public function doDispatch(\Context $context) {
+	public function doDispatch(Context $context) {
 		if(is_null($context)) {
 			echo "context is null";exit;
 		}

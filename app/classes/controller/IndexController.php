@@ -3,8 +3,8 @@ namespace classes\controller;
 use classes\ui\ModelMap;
 use classes\model\Member;
 use classes\stereotype\Controller;
-use classes\util\ViewUtil;
 use classes\web\script\ModelAndView;
+use classes\context\Context;
 
 /**
  * @author 경대
@@ -33,7 +33,7 @@ class IndexController implements Controller {
 		return "memberShow.php";
 	}
 
-	public function setContext(\Context $context) {
+	public function setContext(Context $context) {
 		$this->context = $context;
 	}
 }

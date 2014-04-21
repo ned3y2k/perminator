@@ -1,5 +1,10 @@
 {
-	"*": {},
+	"*": {
+		"tt" : {
+			"className" : "IndexController",
+			"methodName" : "index"
+		}
+	},
 	"GET": {
 		"index" : {
 			"className" : "IndexController",

@@ -1,11 +1,12 @@
 <?php
 namespace classes\trouble\printer;
 use classes\lang\FileStringBuilder;
+use classes\trouble\exception\core\WarningException;
 
 /**
  * Perminator Class
  */
-class XMLExceptionFilePrinter {
+class XMLExceptionFilePrinter implements IExceptionPrinter {
 	const XML_WRAPPER = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
 <XMLExceptionPrinter ver="0.1">
@@ -115,7 +116,7 @@ XML;
 				} else {
 					echo "XML Printer error 잡을것!";
 				}
-			} catch(\WarningException $ex) {
+			} catch(WarningException $ex) {
 				if(is_scalar($arg)) {
 					$argsBuilder->append ( "<Arg{$index}>\n" );
 					$argsBuilder->append ( "<value><![CDATA[" );

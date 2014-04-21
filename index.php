@@ -5,12 +5,19 @@ require_once 'Context.php';
 require_once 'lib/classes/lang/PerminatorClassLoader.php';
 require_once 'lib/classes/web/script/DispatcherScript.php';
 
-$runtimeDebug = false;
+$runtimeDebug = true;
 
 use classes\web\script\DispatcherScript;
 use classes\lang\PerminatorClassLoader;
+use classes\context\Context;
+if(defined('PERMINATOR_TEST') && PERMINATOR_TEST) {
+	error_reporting(E_ALL);
+	ini_set('display_errors', 1);
 
-if(isset($_SERVER) && is_array($_SERVER) && array_key_exists('DOCUMENT_ROOT', $_SERVER)) {
+	define("APP_ROOT", $_SERVER['DOCUMENT_ROOT'].DIRECTORY_SEPARATOR);
+	define("TEST", true);
+	define('DEBUG', $runtimeDebug);
+} elseif(isset($_SERVER) && is_array($_SERVER) && array_key_exists('DOCUMENT_ROOT', $_SERVER)) {
 	error_reporting(E_ALL);
 	ini_set('display_errors', 1);
 
@@ -20,9 +27,8 @@ if(isset($_SERVER) && is_array($_SERVER) && array_key_exists('DOCUMENT_ROOT', $_
 } elseif(isset($_ENV) && is_array($_ENV) && array_key_exists('ZEND_PHPUNIT_PROJECT_LOCATION', $_SERVER)) { // Zend Studio Test 환경
 	define("APP_ROOT", $_ENV['ZEND_PHPUNIT_PROJECT_LOCATION'].DIRECTORY_SEPARATOR);
 	define("TEST", true);
-	define('DEBUG', true);
+	define('DEBUG', $runtimeDebug);
 } else {
-	header('Content-type: text/plain; charset=utf-8');
 	echo 'Runtime 환경을 충족시키지 못하였습니다'."\n";
 	echo '$_SERVER 변수나 $_ENV["ZEND_PHPUNIT_PROJECT_LOCATION"]에 프로젝트 경로를 직접 넣어주십시오.'."\n";
 	exit;
@@ -33,6 +39,6 @@ if(!TEST) {
 	set_include_path(APP_ROOT);
 	$Dispatcher = new DispatcherScript();
 	$Dispatcher->doDispatch(Context::getSharedContext());
-} else {
+} elseif(!defined('PERMINATOR_TEST')) {
 	PerminatorClassLoader::getClassLoader(Context::getSharedContext());
 }

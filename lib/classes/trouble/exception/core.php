@@ -1,13 +1,14 @@
 <?php
 namespace classes\trouble\exception\core;
 
+use classes\context\Context;
 class PerminatorPHPErrorException extends \ErrorException {
 	/**
 	 * @var Context
 	 */
 	private $context;
 
-	function __construct($message, $code, $file, $line, \Context $context = null) {
+	function __construct($message, $code, $file, $line, Context $context = null) {
 		$this->message = $message;
 		$this->code = $code;
 		$this->file = $file;
@@ -43,3 +44,17 @@ class PHPScriptNotFoundException extends \RuntimeException {}
 
 class BeanInitializationException extends \RuntimeException { }
 class NotControllerException extends \RuntimeException { }
+
+class HttpResponseException extends \RuntimeException {
+	const BAD_REUQEST = 400;
+	const UNAUTHORIZED = 401;
+	const PAYMENT_REQUIRED = 402;
+	const FORBIDDEN = 403;
+	const NOT_FOUND = 404;
+	const METHOD_NOT_ALLOWED = 405;
+	const NOT_ACCEPTABLE = 406;
+
+	public function __construct($message, $code, $previous = null) {
+		parent::__construct($message, $code, $previous);
+	}
+}
