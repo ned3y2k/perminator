@@ -1,12 +1,19 @@
+DirectorySlash Off
+
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteRule ^(.*)resources/(.*) resources/$2 [L]
-RewriteRule ^(.*)files/(.*) files/$2 [L]
-
-RewriteCond %{REQUEST_FILENAME} !-d
+RewriteOptions AllowNoSlash
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)resources(.*) $1 [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)files(.*) $1 [L]
 
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^test.runner/(.*) test.runner.php?filePath=$1 [N,QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.+) index.php?uri=$1 [N,QSA,L]
 </IfModule>
 

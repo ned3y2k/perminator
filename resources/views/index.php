@@ -1,4 +1,4 @@
 <form method="post">
-	<input name="name" value="12"><br />
+	<input name="name" value="<?=$no?>"><br />
 	<input type="submit">
 </form>
