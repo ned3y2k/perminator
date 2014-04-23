@@ -6,9 +6,17 @@ interface Component {
 }
 interface Controller extends Component {}
 interface AutowiredBeansOwnedController extends Controller {
+	/**
+	 * @param \classes\context\Context $context
+	 * @return \classes\web\bind\meta\BeanAttributeContainer
+	 */
 	public static function createAutowiredBeanMap(\classes\context\Context $context);
 }
 interface RequestMapOwnedController extends Controller {
+	/**
+	 * @param \classes\context\Context $context
+	 * @return FIXME reuqest map container 도 만들것!
+	 */
 	public static function createRequestMap(\classes\context\Context $context);
 }
 
