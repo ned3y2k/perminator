@@ -55,7 +55,7 @@ class JsonRequestResolver implements RequestResolver {
 		if(!property_exists($config->$requestMethod, $name)) $requestMethod = '*';
 
 		if(!property_exists($config->$requestMethod, $name)) {
-			throw new HttpResponseException("controller bean not found", HttpResponseException::NOT_FOUND);
+			throw new HttpResponseException("{$name} controller bean not found", HttpResponseException::NOT_FOUND);
 		}
 
 		return $config->$requestMethod->$name;

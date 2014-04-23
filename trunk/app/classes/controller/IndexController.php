@@ -15,8 +15,12 @@ use classes\stereotype\RequestMapOwnedController;
 class IndexController implements Controller, AutowiredBeansOwnedController, RequestMapOwnedController {
 	private $context;
 
-	public function index($no) {
-		return "index.php";
+	public function index(ModelMap $map, $no) {
+		$view = new ModelAndView("index.php");
+		$map->addAttribute("no", $no);
+		$view->setModelMap($map);
+
+		return $view;
 	}
 
 	public function indexPost(ModelMap $map ,$no) {
