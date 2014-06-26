@@ -16,7 +16,7 @@ class Database {
 	/**
 	 * @return \classes\database\IDatabaseStatement
 	 */
-	public function prepare($query) {
+	public function prepare($query) { // FIXME Resource Type인지 Object Type인지에 따라 자동으로 바뀌는건데 요렇게 쓰면 더 많은 DB를 허용할수 없다. 오직 mysql만 가능하니 수정 필요
 		if(is_null($this->type)) {
 			return $this->resoureTypePreparedStatement();
 		} else {

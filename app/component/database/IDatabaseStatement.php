@@ -26,3 +26,12 @@ interface IDatabaseStatement {
 	function executeAndFetch($className = self::DEFAULT_CLASS_NAME, $type = self::RESULT_OBJECT, array $iteratorMap = null);
 }
 
+class ValueExtractor {
+	public $fieldName;
+	public $closure;
+
+	public function __construct($fieldName, \Closure $resolverFunc) {
+		$this->fieldName = $fieldName;
+		$this->closure = $resolverFunc;
+	}
+}
