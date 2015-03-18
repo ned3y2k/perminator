@@ -1,11 +1,11 @@
 # perminator
 
-\$php = "PHP";
+$php = "PHP";
 
-\$terminator = "Terminator";
+$terminator = "Terminator";
 
-\$perminator = $php . $terminator;
+$perminator = $php . $terminator;
 
-\$description = "Easy & Flexible PHP Web Framework ";
+$description = "Easy & Flexible PHP Web Framework ";
 
 reqirement for php 5.4 and mod_rewrite
