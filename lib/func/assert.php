@@ -3,7 +3,7 @@ use classes\trouble\exception\assert\AssertCallerException;
 use classes\trouble\exception\assert\AssertEqualException;
 
 /**
- * 이전에 부른 함수명이 비교할 함수 이름과 같은지
+ * Assert Previous the function name
  * @param array|string|... $expectedFuncName
  * @throws AssertCallerException
  * @throws InvalidArgumentException
@@ -20,8 +20,8 @@ function assert_caller_func($expectedFuncName) {
 }
 
 /**
- * @param Scalar $actual
- * @param Scalar $expected
+ * @param mixed $actual
+ * @param mixed $expected
  * @throws AssertEqualException
  */
 function assert_equal($actual, $expected) {

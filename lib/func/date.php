@@ -28,7 +28,7 @@ $date_days_label = array('일요일', '월요일', '화요일', '수요일', '�
  * @param string $date1
  * @param string $date2
  * @param int $type DATE_REMAIN_DAY, DATE_REMAIN_HOUR, DATE_REMAIN_MINUTE, DATE_REMAIN_SECOND
- * return int
+ * @return int
  */
 function date_remain_day($date1, $date2, $type = DATE_REMAIN_DAY) {
 	if($date1 instanceof  \DateTime) $date1 = $date1->format('Y-m-d h:i:s');
@@ -41,6 +41,8 @@ function date_remain_day($date1, $date2, $type = DATE_REMAIN_DAY) {
  * 일자에 일수를 추가한다.
  * @param string $dateStr 일자
  * @param string $day 일수
+ *
+ * @return string date string
  */
 function date_add_day($dateStr, $day) {
 	$date = new DateTime($dateStr);
@@ -114,7 +116,7 @@ function date_explode($begin, $end) {
  * @param int $future_hour
  * @param int $future_min
  * @param int $future_sec
- * @return Map <string, number> hour, min, sec, day
+ * @return array associate array <string, number> hour, min, sec, day
  */
 function date_separate_remain_day($future_year, $future_month, $future_day, $future_hour, $future_min, $future_sec) {
 	// if ( $future_year <= date("Y") ) { $future_year = date("Y")+1; }

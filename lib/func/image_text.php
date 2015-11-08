@@ -45,4 +45,3 @@ imagettftextSp($image, $fontSize, 0, $x, $y, $fontColor, $fontFile, $text, 0);
 header('Content-Type: image/png; Content-Disposition: attachment; filename=image.png');
 imagepng($image);
 imagedestroy($image);
-?>

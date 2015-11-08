@@ -2,14 +2,10 @@
 namespace classes\web\bind\meta;
 
 interface RequestParamCollection {
-	/**
-	 * @return RequestParam[]
-	 */
+	/** @return RequestParam[] */
 	public function& getRequestParams();
 
-	/**
-	 * @return string
-	 */
+	/** @return string */
 	public function getKeyNamePrefix();
 }
 

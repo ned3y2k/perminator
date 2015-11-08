@@ -1,8 +1,13 @@
 <?php
 /**
  * 배열 안에 있는 값을 리턴
+ *
  * @param array $array
  * @param mixed $index
+ *
+ * @param mixed|null  $default
+ *
+ * @return mixed
  */
 function array_value($array, $index, $default = null) {
 	if(!is_array($array) || count($array) == 0 || !array_key_exists($index, $array)) return $default;

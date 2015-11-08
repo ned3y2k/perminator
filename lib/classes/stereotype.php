@@ -1,23 +1,28 @@
 <?php
 namespace classes\stereotype;
 
+use classes\context\Context;
+use classes\web\bind\meta\BeanAttributeContainer;
+
 interface Component {
-	public function setContext(\classes\context\Context $context);
+	public function setContext(Context $context);
 }
 interface Controller extends Component {}
 interface AutowiredBeansOwnedController extends Controller {
 	/**
-	 * @param \classes\context\Context $context
-	 * @return \classes\web\bind\meta\BeanAttributeContainer
+	 * @param Context $context
+	 * @return BeanAttributeContainer
 	 */
-	public static function createAutowiredBeanMap(\classes\context\Context $context);
+	public static function createAutowiredBeanMap(Context $context);
 }
 interface RequestMapOwnedController extends Controller {
 	/**
-	 * @param \classes\context\Context $context
-	 * @return FIXME reuqest map container 도 만들것!
+	 * FIXME reuqest map container 도 만들것!
+	 *
+	 * @param Context $context
+	 * @return
 	 */
-	public static function createRequestMap(\classes\context\Context $context);
+	public static function createRequestMap(Context $context);
 }
 
 interface Repository extends Component {}

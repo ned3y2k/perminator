@@ -92,7 +92,7 @@ function unsupported_operation() { throw new UnsupportedOperationException ( "�
 
 /**
  * 디버그를 하기위하여 표시모드를 텍스트로 바꿈
- * @param string $encoding인코딩
+ * @param string $encoding 인코딩
  */
 function switch_to_text_mode($encoding='utf-8') {
 	header("content-type: text/plain;charset={$encoding}");

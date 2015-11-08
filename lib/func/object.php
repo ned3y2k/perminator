@@ -32,7 +32,7 @@ function object_resign(stdClass &$instance, stdClass $newInstance) {
  *		echo object_element_select($a, array('getMember','getPartner','name'));
  * </code>
  *
- * @param  array   $array
+ * @param  array   $object
  * @param  array   $selectors
  * @param  mixed   $default
  * @return mixed

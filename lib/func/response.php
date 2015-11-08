@@ -1,10 +1,10 @@
 <?php
-use classes\model\html\JavaScriptElement;
+use classes\web\html\JavaScriptElement;
 load_lib('func/request');
 
 /**
  * 페이지 리다이렉트
- * @param stgring $location
+ * @param string $location
  */
 function response_redirect($location) {
 	if (headers_sent ()) echo "<script type='text/javascript'>location.href='{$location}'</script>";
@@ -14,12 +14,11 @@ function response_redirect($location) {
 
 /**
  * 경고 메시지 출력뒤 페이지 이동
- * @param unknown $msg
+ * @param string $msg
  * @param string $location
  */
 function response_alert_redirect($msg, $location = null) {
 	header ( "Content-Type: text/html; charset=UTF-8" );
-	$content = "";
 
 	$script = new JavaScriptElement ();
 	$content = "alert('" . addslashes ( $msg ) . "');";
