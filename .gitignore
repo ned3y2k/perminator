@@ -1,0 +1,16 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+web.config
+package-lock.json
+.idea/
+tmp/
+node_modules/
+css/
+*.min.*
+less/*.css
+less/*.map
+dist/
+var/
+usr/
+cache/
+vendor/*
+!vendor/perminator
