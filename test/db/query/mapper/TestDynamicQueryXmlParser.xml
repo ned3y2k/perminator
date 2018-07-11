@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mapper namespace="alarm">
+    <function id="selectRows">
+        SELECT * FROM v_catalog_items
+        <trim prefix="WHERE" suffixOverrides="AND |OR ">
+            <if test="#confirm != null">
+                saved = #{saved} AND
+            </if>
+            <if test="#categoryId != null">
+                (
+                category_id = #{categoryId} OR
+                FIND_IN_SET(#{categoryId}, cate_parent_id_set)
+                ) AND
+            </if>
+            <if test="#regionId != null">
+                (
+                region_id = #{regionId} OR
+                FIND_IN_SET(#{regionId}, region_parent_id_set)
+                ) AND
+            </if>
+            <if test="#productName != null">
+                productName LIKE %#{productName}% AND
+            </if>
+
+            <if test="#date != null">
+                <if test="(#criteriaDate != null) and (#criteriaDate == 'updated')">
+                    <![CDATA[
+                    updatedTime <= ${date} AND
+                    updatedTime > TIMESTAMP(DATE(#{date}) + INTERVAL 1 DAY)
+                ]]> AND
+                </if>
+                <if test="#criteriaDate == 'created' || #criteriaDate == null">
+                    <![CDATA[
+                    createdTime <= #{date} AND
+                    createdTime > TIMESTAMP(DATE(#{date}) + INTERVAL 1 DAY)
+                ]]> AND
+                </if>
+            </if>
+
+            <if test="#isValid != null and #isValid == true">
+                updatedTime >= (NOW() + INTERVAL -48 HOUR)
+            </if>
+        </trim>
+
+        LIMIT #{i:offset}, #{i:rowCount}
+    </function>
+</mapper>

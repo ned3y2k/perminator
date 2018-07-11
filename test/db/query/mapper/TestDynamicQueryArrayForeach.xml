@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper SYSTEM "http://inmoa.bit/dtd/DynamicQuery-mapper.dtd">
+<mapper namespace="TestDynamicQueryArrayForeach">
+    <function id="select">
+        SELECT
+        (
+        <trim suffixOverrides="+">
+            <foreach collection="#list" item="#item" separator="+">
+                #{item['var']}
+            </foreach>
+        </trim>
+        )
+
+    </function>
+</mapper>
