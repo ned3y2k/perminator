@@ -13,4 +13,5 @@ var/
 usr/
 cache/
 vendor/*
+plugin/
 !vendor/perminator
