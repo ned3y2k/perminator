@@ -8,23 +8,39 @@
 namespace classes\context;
 
 
-class RequestContext {
+class RequestContext
+{
+	use ContextAssistTrait;
+
 	/** @var RequestMethod */
 	private $requestMethod;
+	/** @var RequestSession */
+	private $requestSession;
 
-	/** RequestContext constructor. */
-	public function __construct() {
-		$this->requestMethod = new RequestMethod();
+
+	public function getUserAgent(): string {
+		if (TEST)
+			return 'TestUnit';
+		else
+			return $_SERVER['HTTP_USER_AGENT'];
 	}
 
-	public function getContentType() { return $_SERVER["CONTENT_TYPE"]; }
-	public function compareContentType($contentType) { return trim(strtolower($_SERVER["CONTENT_TYPE"])) == trim(strtolower($contentType)); }
+	public function getSession() {
+		if (!$this->requestSession)
+			$this->requestSession = new RequestSession($this);
 
-	public function getUserAgent() { return $_SERVER["HTTP_USER_AGENT"]; }
+		return $this->requestSession;
+	}
+
+	public function getScheme(): string { return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http'; }
+
+	public function getContentType() { return $_SERVER["CONTENT_TYPE"]; }
+
+	public function compareContentType($contentType) { return trim(strtolower($_SERVER["CONTENT_TYPE"])) == trim(strtolower($contentType)); }
 
 	public function getRemoteHost() { return $_SERVER["REMOTE_HOST"]; }
 
-	public function getRemoteAddr() { return $_SERVER["REMOTE_ADDR"]; }
+	public function getRemoteAddr() { return array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER["REMOTE_ADDR"]; }
 
 	public function cookie($key, $defaultValue = null, $trim = false) {
 		if (!is_scalar($key)) throw new \InvalidArgumentException("invalid key type");
@@ -44,10 +60,15 @@ class RequestContext {
 		return $data;
 	}
 
-	public function getRequestMethod() { return $this->requestMethod; }
+	public function getRequestMethod() {
+		if (!$this->requestMethod)
+			$this->requestMethod = new RequestMethod();
+
+		return $this->requestMethod;
+	}
 
 	public function postParam($key, $defaultValue = null, $trim = false) {
-		if(!$this->requestMethod->isPost())
+		if (!$this->requestMethod->isPost())
 			throw new \RuntimeException("request method is not post");
 
 		if (!is_scalar($key)) throw new \InvalidArgumentException("invalid key type");
@@ -66,22 +87,4 @@ class RequestContext {
 		if ($trim) return array_key_exists($key, $_GET) ? $this->requestParamTrim($_GET [$key], $defaultValue) : $defaultValue;
 		else return array_key_exists($key, $_GET) ? $_GET [$key] : $defaultValue;
 	}
-
-	private function requestParamTrim($value, $defaultValue) {
-		if (is_array($value)) {
-			if (count($value) == 0) return null;
-
-			foreach ($value as &$v) {
-				if (strlen(trim($v)) == 0) {
-					$v = $defaultValue;
-				}
-			}
-
-			return $value;
-		} else {
-			if (strlen(trim($value)) == 0) return $defaultValue;
-			else return $value;
-		}
-	}
-
 }

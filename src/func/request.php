@@ -2,36 +2,6 @@
 
 use classes\lang\ArrayUtil;
 
-function request_user_agent() {
-	if (TEST)
-		return 'TestUnit';
-	else
-		return $_SERVER[ 'HTTP_USER_AGENT' ];
-}
-
-function request_session_started() {
-	if (php_sapi_name() !== 'cli') {
-		if (version_compare(phpversion(), '5.4.0', '>=')) {
-			return session_status() === PHP_SESSION_ACTIVE ? true : false;
-		} else {
-			return session_id() === '' ? false : true;
-		}
-	}
-
-	return false;
-}
-
-/**
- * 셔션 ID 가져 오기를 시도
- * @throws RuntimeException
- * @internal param callable $sessionStarter
- * @return string
- */
-function request_session_id() {
-	if (session_id() == '') throw new RuntimeException ('you must be sesseion_start()');
-
-	return session_id();
-}
 
 /**
  * 웹에서 사용하는 사용자 변수를 trim
