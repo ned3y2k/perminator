@@ -16,9 +16,6 @@ class DirConstantsInitializer implements Initializer {
 
 		if (!TEST) {
 			$this->initDirConstants();
-
-			/** $_SERVER['PHP_SELF']와 동일 */
-			define('_SELF_', $_SERVER['PHP_SELF']);
 		} else {
 			$this->initTestDirConstants();
 		}
