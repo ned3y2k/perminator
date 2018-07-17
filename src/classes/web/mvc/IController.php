@@ -27,4 +27,6 @@ interface IController {
 
 	/** @return IPageBuilder|HttpResponse */
 	function handleRequest();
+
+	function onCreate();
 }

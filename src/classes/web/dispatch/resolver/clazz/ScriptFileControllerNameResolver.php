@@ -11,7 +11,7 @@ namespace classes\web\dispatch\resolver\clazz;
 
 class ScriptFileControllerNameResolver implements IControllerClassNameResolver {
 
-	function resolve(string $providedClassName = null) {
+	function resolve(string $providedClassName = null): string {
 		$namespace = str_replace('/', '\\', dirname(_SELF_)) . '\\';
 		if (TEST) {
 			$namespace = substr($namespace, strlen(_APP_ROOT_));
@@ -24,14 +24,11 @@ class ScriptFileControllerNameResolver implements IControllerClassNameResolver {
 
 			$fullName = str_replace('.', '_', $fullName, $count);
 
-			$cacheName = "pathMap-" . $fullName;
-
-			return array($fullName, $cacheName);
+			return $fullName;
 		} else {
 			$fullName = $providedClassName;
-			$cacheName = "pathMap-" . '-userDefined-' . $fullName;
 
-			return array($fullName, $cacheName);
+			return $fullName;
 		}
 	}
 }

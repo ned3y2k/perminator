@@ -9,20 +9,18 @@
 use classes\initializer\Initializer;
 
 $initializerList = [
-	'TestRuntimeDetectorInitializer',
-	'EnvironmentInitializer',
-	'DirConstantsInitializer',
-	'ContextInitializer',
-//	'AppInitializerDelegate',
-	'ErrorHandlerInitializer',
-	'DispatcherInitializer',
+	'classes\initializer\TestRuntimeDetectorInitializer',
+	'classes\initializer\EnvironmentInitializer',
+	'classes\initializer\DirConstantsInitializer',
+	'classes\initializer\ContextInitializer',
+//	'classes\initializer\AppInitializerDelegate',
+	'classes\initializer\ErrorHandlerInitializer',
+	'classes\initializer\DispatcherInitializer',
 ];
-echo __PERMINATOR__;
+
 foreach ($initializerList as $name) {
 	/** @var Initializer $initializer */
-	require_once $name.'.php';
-
-	$class = 'classes\initializer\\'.$name;
+	$class = $name;
 	$initializer = new $class();
 	$initializer->init();
 }

@@ -32,6 +32,7 @@ class RequestExecutor implements IRequestExecutor {
 			throw $thrownException;
 		}
 
+		// 여기서 컨트롤러 이름을 빼주고 다음에 처리 해야 할듯 한데
 
 		return $this->dispatchResolver->resolve($className);
 	}

@@ -8,7 +8,6 @@
 
 namespace classes\test;
 
-use classes\test\context\TestApplicationContext;
 use classes\TestContainer;
 use PHPUnit\Framework\TestCase;
 

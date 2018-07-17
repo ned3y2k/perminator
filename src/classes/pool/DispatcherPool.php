@@ -34,7 +34,7 @@ class DispatcherPool {
  * @return HttpResponse
  * @throws \Exception
  */
-function doDispatch($className = null) {
+function doDispatch($className = null): HttpResponse {
 	$res = DispatcherPool::get()->doDispatch($className);
 
 	if (TEST && empty($className)) {

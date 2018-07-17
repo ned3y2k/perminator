@@ -9,13 +9,12 @@
 namespace classes\web\dispatch\resolver;
 
 use ApplicationContextPool;
-use classes\web\dispatch\factory\ControllerFactory;
+use classes\web\dispatch\executor\ControllerExecutor;
 use classes\web\dispatch\factory\ResponseFactory;
 use classes\web\dispatch\interceptor\InterceptorManager;
-use classes\web\dispatch\loader\SimpleControllerLoader;
 use classes\web\dispatch\resolver\clazz\IControllerClassNameResolver;
 use classes\web\IInterceptorFinder;
-use classes\web\mvc\ExceptionHandledController;
+use classes\web\mvc\IExceptionHandledController;
 use classes\web\mvc\IController;
 
 
@@ -27,10 +26,10 @@ use classes\web\mvc\IController;
 class DispatcherResolver implements IDispatcherResolver {
 	/** @var IControllerClassNameResolver */
 	private $controllerClassNameResolver;
-	private $controllerFactory;
 	private $applicationContext;
 	private $responseFactory;
 	private $interceptorManager;
+	private $controllerExecutor;
 
 	/**
 	 * DispatchResolver constructor.
@@ -42,10 +41,9 @@ class DispatcherResolver implements IDispatcherResolver {
 	public function __construct(IControllerClassNameResolver $controllerClassNameResolver) {
 		$this->applicationContext = ApplicationContextPool::get();
 
-		$this->controllerClassNameResolver = $controllerClassNameResolver;
-		$this->controllerFactory = new ControllerFactory();
 		$this->interceptorManager = new InterceptorManager();
 		$this->responseFactory = new ResponseFactory($this->applicationContext, $this->interceptorManager);
+		$this->controllerExecutor = new ControllerExecutor($this->applicationContext, $controllerClassNameResolver);
 	}
 
 
@@ -65,15 +63,14 @@ class DispatcherResolver implements IDispatcherResolver {
 	 * @throws \Throwable
 	 */
 	public function resolve($className) {
-		list($fullName, $cacheName) = $this->controllerClassNameResolver->resolve($className);
+		$fullName = $this->controllerClassNameResolver->resolve($className);
 
 		try {
-			$controller = $this->controllerFactory->createControllerInstance($fullName, $this->applicationContext);
-			$this->sendResponse($controller);
+			$res = $this->controllerExecutor->execute($fullName);
 		} catch (\Throwable $ex) {
-			if (in_array('classes\web\mvc\ExceptionHandledController', class_implements($fullName))) {
-				/** @var $fullName ExceptionHandledController */
-				$fullName::handleException($ex);
+			if (in_array('classes\web\mvc\IExceptionHandledController', class_implements($fullName, false))) {
+				/** @var $fullName IExceptionHandledController */
+				$fullName::handleException($ex)->send();
 			} elseif (!TEST)
 				$this->applicationContext->getExceptionHandler()->handling($ex);
 			else throw $ex;

@@ -10,6 +10,7 @@ namespace classes\web\dispatch;
 
 use classes\web\dispatch\executor\IRequestExecutor;
 use classes\web\dispatch\resolver\IDispatcherResolver;
+use classes\web\HttpResponse;
 use classes\web\IInterceptorFinder;
 
 /**
@@ -43,7 +44,7 @@ class Dispatcher {
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function doDispatch($className = null) {
+	public function doDispatch($className = null): HttpResponse {
 		return $this->requestExecutor->doDispatch($className);
 	}
 }

@@ -10,5 +10,5 @@ namespace classes\web\dispatch\resolver\clazz;
 
 
 interface IControllerClassNameResolver {
-	function resolve(string $providedClassName = null);
+	function resolve(string $providedClassName = null): string;
 }

@@ -26,12 +26,13 @@ class ControllerFactory {
 		/** @var IController $controller instance */
 		$controller = new $fullName();
 		$controller->setApplicationContext($applicationContext);
+		$controller->onCreate();
 
 		return $controller;
 	}
 
 	private function checkControllerClass($fullName) {
-		$implements = class_implements($fullName);
+		$implements = class_implements($fullName, false);
 		$check = key_exists('classes\web\mvc\IController', $implements);
 
 		if (!$check) {

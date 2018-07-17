@@ -10,7 +10,7 @@ namespace classes\web\dispatch\resolver\clazz;
 
 
 class RouteEntryControllerNameResolver implements IControllerClassNameResolver {
-	function resolve(string $providedClassName = null) {
+	function resolve(string $providedClassName = null): string {
 		$entryScript = '/index.php';
 		$entryScriptLen = strlen($entryScript);
 
@@ -19,24 +19,27 @@ class RouteEntryControllerNameResolver implements IControllerClassNameResolver {
 			return $resolver->resolve($providedClassName);
 		}
 
-		$invoked = substr(trim(_SELF_, " \t\n\r\x0B/"), 0);
-		if($invoked == substr($entryScript, 1)) {
-			$invoked = '';
-		}
-		$className = basename($invoked);
-		$namespace = "app\\classes\\controller\\" . str_replace('/', "\\", substr($invoked, $entryScriptLen, -strlen($className)));
+		if (!$providedClassName) {
+			$invoked = substr(trim($providedClassName, " \t\n\r\x0B/"), 0);
+			if ($invoked == substr($entryScript, 1)) {
+				$invoked = '';
+			}
+			$className = basename($invoked);
+			$namespace = "app\\classes\\controller\\" . str_replace('/', "\\", substr($invoked, $entryScriptLen, -strlen($className)));
 
-		$dir = _APP_ROOT_ . str_replace("\\", DIRECTORY_SEPARATOR, $namespace . $className);
+			$dir = _APP_ROOT_ . str_replace("\\", DIRECTORY_SEPARATOR, $namespace . $className);
 
-		if (is_dir($dir)) {
-			$fullName = $namespace . $className . "\\IndexController";
+			if (is_dir($dir)) {
+				$fullName = $namespace . $className . "\\IndexController";
+			} else {
+				$fullName = $namespace . ucwords($className) . "Controller";
+			}
+
+			$fullName = trim(str_replace('\\\\', '\\', $fullName));
 		} else {
-			$fullName = $namespace . ucwords($className) . "Controller";
+			$fullName = $providedClassName;
 		}
 
-		$fullName = trim(str_replace('\\\\', '\\', $fullName));
-		$cacheName = "pathMap-" . $fullName;
-
-		return array($fullName, $cacheName);
+		return $fullName;
 	}
 }

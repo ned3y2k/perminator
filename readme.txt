@@ -1,0 +1,1 @@
+$_SERVER['PHP_SELF'] 취약점 확인
