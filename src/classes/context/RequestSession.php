@@ -16,6 +16,7 @@ class RequestSession {
 
 	/** @var RequestContext */
 	private $requestContext;
+	private $options;
 
 	/**
 	 * RequestSession constructor.
@@ -24,8 +25,11 @@ class RequestSession {
 	public function __construct(RequestContext $requestContext) { $this->requestContext = $requestContext; }
 
 	public function open($options = []) {
-		if ($this->isStarted()) {
+		if (!$this->isOpened()) {
+			$this->options = $options;
 			session_start($options);
+		} elseif($this->options != $options) {
+			throw new \RuntimeException("Session options are different.");
 		}
 	}
 
@@ -33,7 +37,7 @@ class RequestSession {
 	/**
 	 * @return bool
 	 */
-	public function isStarted(): bool {
+	public function isOpened(): bool {
 		if (php_sapi_name() !== 'cli') {
 			if (version_compare(phpversion(), '5.4.0', '>=')) {
 				return session_status() === PHP_SESSION_ACTIVE ? true : false;
@@ -57,7 +61,7 @@ class RequestSession {
 	}
 
 	public function setValue(string $key, &$val) {
-		if ($this->isStarted()) {
+		if ($this->isOpened()) {
 			$_SESSION[$key] = $val;
 			return;
 		}

@@ -11,9 +11,8 @@ namespace classes\context;
 class RequestContext
 {
 	use ContextAssistTrait;
+	use RequestMethod;
 
-	/** @var RequestMethod */
-	private $requestMethod;
 	/** @var RequestSession */
 	private $requestSession;
 
@@ -60,15 +59,8 @@ class RequestContext
 		return $data;
 	}
 
-	public function getRequestMethod() {
-		if (!$this->requestMethod)
-			$this->requestMethod = new RequestMethod();
-
-		return $this->requestMethod;
-	}
-
 	public function postParam($key, $defaultValue = null, $trim = false) {
-		if (!$this->requestMethod->isPost())
+		if (!$this->isPost())
 			throw new \RuntimeException("request method is not post");
 
 		if (!is_scalar($key)) throw new \InvalidArgumentException("invalid key type");

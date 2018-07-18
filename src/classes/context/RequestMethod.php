@@ -8,7 +8,7 @@
 namespace classes\context;
 
 
-class RequestMethod
+trait RequestMethod
 {
 	function isGet() { return $_SERVER['REQUEST_METHOD'] == 'GET'; }
 
