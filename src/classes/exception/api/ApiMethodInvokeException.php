@@ -9,6 +9,6 @@
 namespace classes\exception\api;
 
 
-class ApiMethodInvokeException {
+class ApiMethodInvokeException extends ApiException {
 
 }

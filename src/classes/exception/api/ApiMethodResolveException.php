@@ -9,6 +9,6 @@
 namespace classes\exception\api;
 
 
-class ApiMethodResolveException {
+class ApiMethodResolveException extends ApiException {
 
 }

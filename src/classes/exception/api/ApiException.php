@@ -9,6 +9,6 @@
 namespace classes\exception\api;
 
 
-class ApiException {
+class ApiException extends \RuntimeException {
 
 }
