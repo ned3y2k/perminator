@@ -20,7 +20,7 @@ class RouteEntryControllerNameResolver implements IControllerClassNameResolver {
 		}
 
 		if (!$providedClassName) {
-			$invoked = substr(trim($providedClassName, " \t\n\r\x0B/"), 0);
+			$invoked = substr(trim(_SELF_, " \t\n\r\x0B/"), 0);
 			if ($invoked == substr($entryScript, 1)) {
 				$invoked = '';
 			}

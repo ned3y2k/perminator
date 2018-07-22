@@ -25,7 +25,7 @@ class RequestSession {
 	public function __construct(RequestContext $requestContext) { $this->requestContext = $requestContext; }
 
 	public function open($options = []) {
-		if (!$this->isOpened()) {
+		if (!TEST && !$this->isOpened()) {
 			$this->options = $options;
 			session_start($options);
 		} elseif($this->options != $options) {

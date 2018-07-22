@@ -187,7 +187,6 @@ abstract class ActionController implements IController
 	private function doResponseDispatch($actionName)
 	{
 		$req = $this->applicationContext->getRequestContext();
-		$reqM = $req->getRequestMethod();
 
 		if (!$actionName) {
 			$shortMethodName = 'handleDefault';
@@ -197,19 +196,19 @@ abstract class ActionController implements IController
 			$suffix = ucwords($shortMethodName);
 		}
 
-		if ($reqM->isGet() && method_exists($this, $longMethodName = 'get' . $suffix)) {
+		if ($req->isGet() && method_exists($this, $longMethodName = 'get' . $suffix)) {
 			return $this->checkResponse($actionName, $this->$longMethodName());
-		} elseif ($reqM->isPost() && method_exists($this, $longMethodName = 'post' . $suffix)) {
+		} elseif ($req->isPost() && method_exists($this, $longMethodName = 'post' . $suffix)) {
 			return $this->checkResponse($actionName, $this->$longMethodName());
-		} elseif ($reqM->isDelete() && method_exists($this, $longMethodName = 'delete' . $suffix)) {
+		} elseif ($req->isDelete() && method_exists($this, $longMethodName = 'delete' . $suffix)) {
 			return $this->checkResponse($actionName, $this->$longMethodName());
-		} elseif ($reqM->isHead() && method_exists($this, $longMethodName = 'head' . $suffix)) {
+		} elseif ($req->isHead() && method_exists($this, $longMethodName = 'head' . $suffix)) {
 			return $this->checkResponse($actionName, $this->$longMethodName());
-		} elseif ($reqM->isConnect() && method_exists($this, $longMethodName = 'connect' . $suffix)) {
+		} elseif ($req->isConnect() && method_exists($this, $longMethodName = 'connect' . $suffix)) {
 			return $this->checkResponse($actionName, $this->$longMethodName());
-		} elseif ($reqM->isPut() && method_exists($this, $longMethodName = 'put' . $suffix)) {
+		} elseif ($req->isPut() && method_exists($this, $longMethodName = 'put' . $suffix)) {
 			return $this->checkResponse($actionName, $this->$longMethodName());
-		} elseif ($reqM->isOptions() && method_exists($this, $longMethodName = 'options' . $suffix)) {
+		} elseif ($req->isOptions() && method_exists($this, $longMethodName = 'options' . $suffix)) {
 			return $this->checkResponse($actionName, $this->$longMethodName());
 		} elseif (method_exists($this, $shortMethodName)) {
 			return $this->checkResponse($actionName, $this->$shortMethodName());

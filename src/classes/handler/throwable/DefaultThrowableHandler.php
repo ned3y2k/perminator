@@ -10,6 +10,7 @@ namespace classes\handler\throwable;
 use classes\exception\http\HTTPResponseException;
 use classes\lang\ArrayUtil;
 use classes\util\ThrowableLogger;
+use classes\web\XMLExceptionPrinter;
 
 class DefaultThrowableHandler implements IThrowableHandler {
 	/** @var string[] 예외 페이지들 */
@@ -17,7 +18,7 @@ class DefaultThrowableHandler implements IThrowableHandler {
 
 	/**
 	 * @param string $exceptionClass 예외 클래스명
-	 * @param string $page           예외 페이지 경로
+	 * @param string $page 예외 페이지 경로
 	 */
 	public function addExceptionPage(string $exceptionClass, string $page) { self::$exceptionPages[$exceptionClass] = $page; }
 
@@ -53,7 +54,7 @@ class DefaultThrowableHandler implements IThrowableHandler {
 	private function displayHandledTypes($types, /** @noinspection PhpUnusedParameterInspection */
 	                                     \Throwable $throwable) {
 
-		if($throwable instanceof HTTPResponseException) {
+		if ($throwable instanceof HTTPResponseException) {
 			http_response_code($throwable->getCode());
 		}
 
@@ -87,32 +88,28 @@ class DefaultThrowableHandler implements IThrowableHandler {
 	private function displayUnhandledTypes(\Throwable $throwable) {
 		http_response_code(500);
 
-		if (!extension_loaded('xdebug')) {
-			require_once __PERMINATOR__ . "assets/exception_page/UnhandledException.php";
+
+		if (ini_get('html_errors') == 0) {
+			getApplicationContext()->getResponseContext()->setContextType('text/plain', _DEFAULT_CHARSET_);
+
+			echo "exception class: " . get_class($throwable) . "\n";
+			echo "file: " . $throwable->getFile() . "\n";
+			echo "code: " . $throwable->getCode() . "\n";
+			echo "msg: " . $throwable->getMessage() . "\n";
+			echo "\n";
+
+			echo $throwable->getTraceAsString();
 		} else {
-			if (ini_get('html_errors') == 0) {
-				getApplicationContext()->getResponseContext()->setContextType('text/plain', _DEFAULT_CHARSET_);
-				echo "xdebug loaded\n\n";
+			getApplicationContext()->getResponseContext()->setContextType('text/html', _DEFAULT_CHARSET_);
+			echo "<strong>xdebug loaded</strong><br><br>";
 
-				echo "exception class: " . get_class($throwable) . "\n";
-				echo "file: " . $throwable->getFile() . "\n";
-				echo "code: " . $throwable->getCode() . "\n";
-				echo "msg: " . $throwable->getMessage() . "\n";
-				echo "\n";
+			echo "exception class: <strong>" . get_class($throwable) . "</strong><br>";
+			echo "file: <strong>" . $throwable->getFile() . "</strong><br>";
+			echo "code: <strong>" . $throwable->getCode() . "</strong><br>";
+			echo "msg: <strong>" . $throwable->getMessage() . "</strong><br>";
+			echo "<br>";
 
-				echo $throwable->getTraceAsString();
-			} else {
-				getApplicationContext()->getResponseContext()->setContextType('text/html', _DEFAULT_CHARSET_);
-				echo "<strong>xdebug loaded</strong><br><br>";
-
-				echo "exception class: <strong>" . get_class($throwable) . "</strong><br>";
-				echo "file: <strong>" . $throwable->getFile() . "</strong><br>";
-				echo "code: <strong>" . $throwable->getCode() . "</strong><br>";
-				echo "msg: <strong>" . $throwable->getMessage() . "</strong><br>";
-				echo "<br>";
-
-				echo nl2br($throwable->getTraceAsString());
-			}
+			echo nl2br($throwable->getTraceAsString());
 		}
 	}
 }

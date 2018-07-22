@@ -10,18 +10,19 @@ namespace classes\web\dispatch\factory;
 
 
 use classes\{
-	context\IApplicationContext, web\mvc\IController
+	context\IApplicationContext, io\exception\FileNotFoundException, web\mvc\IController
 };
 
 class ControllerFactory {
 	/**
-	 * @param string              $fullName
+	 * @param string $fullName
 	 * @param IApplicationContext $applicationContext
 	 *
 	 * @return IController
+	 * @throws FileNotFoundException
 	 */
 	public function createControllerInstance($fullName, IApplicationContext $applicationContext) {
-		$this->checkControllerClass($fullName);
+		$this->loadAndCheckControllerClass($fullName);
 
 		/** @var IController $controller instance */
 		$controller = new $fullName();
@@ -31,8 +32,11 @@ class ControllerFactory {
 		return $controller;
 	}
 
-	private function checkControllerClass($fullName) {
-		$implements = class_implements($fullName, false);
+	/**
+	 * @param $fullName
+	 */
+	private function loadAndCheckControllerClass($fullName) {
+		$implements = class_implements($fullName);
 		$check = key_exists('classes\web\mvc\IController', $implements);
 
 		if (!$check) {

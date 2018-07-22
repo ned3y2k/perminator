@@ -10,10 +10,10 @@ use classes\initializer\Initializer;
 
 $initializerList = [
 	'classes\initializer\TestRuntimeDetectorInitializer',
-	'classes\initializer\EnvironmentInitializer',
 	'classes\initializer\DirConstantsInitializer',
+	'classes\initializer\AppInitializerDelegate',
+	'classes\initializer\EnvironmentInitializer',
 	'classes\initializer\ContextInitializer',
-//	'classes\initializer\AppInitializerDelegate',
 	'classes\initializer\ErrorHandlerInitializer',
 	'classes\initializer\DispatcherInitializer',
 ];

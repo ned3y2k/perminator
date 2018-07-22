@@ -5,6 +5,7 @@
  * 일자: 2014-09-23
  * 시간: 오후 1:24
  */
+
 namespace classes\web\mvc;
 
 use classes\context\IApplicationContext;
@@ -22,11 +23,8 @@ interface IController {
 	 */
 	function setApplicationContext(IApplicationContext $applicationContext);
 
-	/** @return string[] */
-	static function requireLibs();
-
-	/** @return IPageBuilder|HttpResponse */
-	function handleRequest();
+	/** @return HttpResponse */
+	function handleRequest(): HttpResponse;
 
 	function onCreate();
 }

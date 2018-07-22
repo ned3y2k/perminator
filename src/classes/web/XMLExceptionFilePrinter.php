@@ -54,7 +54,7 @@ XML;
 	 * @throws FileNotFoundException
 	 * @throws PermissionException
 	 */
-	public function publish(\Exception $exception) {
+	public function publish(\Throwable $exception) {
 		$exceptionStacksStrBuilder = new FileStringBuilder();
 		$callStacksStrBuilder      = new FileStringBuilder();
 
@@ -137,7 +137,7 @@ XML;
 					$argsBuilder->append ( "print error" );
 					echo "XML Printer error 잡을것!";
 				}
-			} catch (\WarningException $ex) {
+			} catch (WarningException $ex) {
 				if (is_scalar($arg)) {
 					$argsBuilder->append("<Arg{$index}>\n");
 					$argsBuilder->append("<value><![CDATA[");

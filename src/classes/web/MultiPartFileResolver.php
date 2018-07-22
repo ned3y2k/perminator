@@ -27,7 +27,7 @@ class MultiPartFileResolver {
 	 * @throws IOException
 	 */
 	function __construct() {
-		if (strpos(ArrayUtil::getValue($_SERVER, 'CONTENT_TYPE', ''), 'multipart/form-data') === false || !ApplicationContextPool::get()->getRequestContext()->getRequestMethod()->isPost())
+		if (strpos(ArrayUtil::getValue($_SERVER, 'CONTENT_TYPE', ''), 'multipart/form-data') === false || !ApplicationContextPool::get()->getRequestContext()->isPost())
 			throw new IOException('enctype이 multipart/form-data이 아니거나 get 방식입니다.');
 	}
 

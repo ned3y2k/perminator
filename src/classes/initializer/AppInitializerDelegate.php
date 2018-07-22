@@ -10,8 +10,6 @@ namespace classes\initializer;
 
 use app\classes\initializer\AppInitializer;
 
-require_once _APP_ROOT_.'app/classes/initializer/AppInitializer.php';
-
 class AppInitializerDelegate implements Initializer {
 	public function init() {
 		$initializer = new AppInitializer();

@@ -168,8 +168,7 @@ class HttpResponse {
 	 * @return bool
 	 */
 	private function isSupportedCompress() {
-		load_lib('func/request');
-		return request_accept_encoding('gzip');
+		return stripos(ArrayUtil::getValue($_SERVER, 'HTTP_ACCEPT_ENCODING'), 'gzip') !== false;
 	}
 
 	/** @param $etag */

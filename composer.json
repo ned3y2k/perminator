@@ -13,9 +13,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "paragraph1/php-fcm": "0.7",
     "chronon/mobile_detect": "1.1.2",
-
     "symfony/console": "~3.0|~4.0",
     "symfony/filesystem": "~3.0|~4.0",
     "symfony/process": "~3.0|~4.0"
@@ -26,7 +24,11 @@
     "behat/behat": "3.4.x-dev"
   },
   "autoload": {
-    "classmap": ["src/"],
-    "files": ["src/init.php"]
+    "classmap": [
+      "src/"
+    ],
+    "files": [
+      "src/init.php"
+    ]
   }
 }

@@ -15,6 +15,7 @@ use classes\database\statement\MysqliPrepareStmt;
 use classes\database\statement\MysqlPrepareStmt;
 use classes\database\statement\PDOPrepareStatement;
 use classes\lang\ArrayUtil;
+use classes\util\DevUtil;
 
 /**
  * Class DynamicQueryMysqlBehavior
@@ -91,12 +92,11 @@ class DynamicQueryMysqlBehavior implements IBehavior {
 			$stmt = $this->createPrepareStmt();
 			$this->callBindParam($stmt);
 			if ($this->debugFlag >= self::DEBUG_SIMPLE && $stmt instanceof MysqlPrepareStmt) {
-				load_lib('func/dev');
 				$msg = '--------------' . date('Y-m-d H:i:s') . "--------------------\n";
 				if ($this->debugFlag >= self::DEBUG_FULL) $msg .= var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true) . "\n";
 				$msg .= $stmt->getQuery() . "\n";
 				$msg .= "-----------------------------------------------------\n";
-				dev_log_simpled(date('Ymd') . '-MysqlPrepareStmtDebug.log', $msg, true);
+				DevUtil::logSimpled(date('Ymd') . '-MysqlPrepareStmtDebug.log', $msg, true);
 			}
 
 			return $stmt->executeAndFetch($this->returnClassName, $this->resultType, $this->iteratorMap);
@@ -144,7 +144,7 @@ class DynamicQueryMysqlBehavior implements IBehavior {
 				if ($this->debugFlag >= self::DEBUG_FULL) $msg .= var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true) . "\n";
 				$msg .= $stmt->getQuery() . "\n";
 				$msg .= "-----------------------------------------------------\n";
-				dev_log_simpled(date('Ymd') . '-MysqlPrepareStmtDebug.log', $msg, true);
+				DevUtil::logSimpled(date('Ymd') . '-MysqlPrepareStmtDebug.log', $msg, true);
 			}
 			$stmt->execute();
 

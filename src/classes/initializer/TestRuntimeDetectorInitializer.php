@@ -12,7 +12,7 @@ namespace classes\initializer;
 class TestRuntimeDetectorInitializer implements Initializer {
 
 	public function init() {
-		$launchScript = $GLOBALS['argv'][0];
+		$launchScript = array_key_exists('argv', $GLOBALS) ? $GLOBALS['argv'][0] : '';
 		$launchScriptIsComposerPhpUnit = basename($launchScript) == 'phpunit' && strpos($launchScript, 'vendor') !== false;
 
 		if (php_sapi_name() == 'cli' && $launchScriptIsComposerPhpUnit) {

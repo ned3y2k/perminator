@@ -13,9 +13,10 @@ use classes\web\dispatch\executor\ControllerExecutor;
 use classes\web\dispatch\factory\ResponseFactory;
 use classes\web\dispatch\interceptor\InterceptorManager;
 use classes\web\dispatch\resolver\clazz\IControllerClassNameResolver;
+use classes\web\HttpResponse;
 use classes\web\IInterceptorFinder;
-use classes\web\mvc\IExceptionHandledController;
 use classes\web\mvc\IController;
+use classes\web\mvc\IExceptionHandledController;
 
 
 /**
@@ -40,7 +41,7 @@ class DispatcherResolver implements IDispatcherResolver {
 	 */
 	public function __construct(IControllerClassNameResolver $controllerClassNameResolver) {
 		$this->applicationContext = ApplicationContextPool::get();
-
+		$this->controllerClassNameResolver = $controllerClassNameResolver;
 		$this->interceptorManager = new InterceptorManager();
 		$this->responseFactory = new ResponseFactory($this->applicationContext, $this->interceptorManager);
 		$this->controllerExecutor = new ControllerExecutor($this->applicationContext, $controllerClassNameResolver);
@@ -57,23 +58,26 @@ class DispatcherResolver implements IDispatcherResolver {
 	/**
 	 * @param string $className
 	 *
-	 * @return mixed|void
+	 * @return HttpResponse
 	 * @throws \InvalidArgumentException
 	 * @throws \Exception
 	 * @throws \Throwable
 	 */
-	public function resolve($className) {
+	public function resolve($className): HttpResponse {
 		$fullName = $this->controllerClassNameResolver->resolve($className);
 
 		try {
 			$res = $this->controllerExecutor->execute($fullName);
+			
+			return $res;
 		} catch (\Throwable $ex) {
 			if (in_array('classes\web\mvc\IExceptionHandledController', class_implements($fullName, false))) {
 				/** @var $fullName IExceptionHandledController */
-				$fullName::handleException($ex)->send();
-			} elseif (!TEST)
+				return $fullName::handleException($this->applicationContext, $ex);
+			} else {
 				$this->applicationContext->getExceptionHandler()->handling($ex);
-			else throw $ex;
+				exit;
+			}
 		}
 
 	}

@@ -45,8 +45,7 @@ class ThrowableLogger {
 	 * @throws \classes\io\exception\PermissionException
 	 */
 	public function writeObjectLog(\Throwable $exception) {
-		load_lib('func/dev');
-		dev_var_export($this->createLogFileName($exception) . '.log', $exception, false);
+		DevUtil::varExport($this->createLogFileName($exception) . '.log', $exception, false);
 	}
 
 	/**
