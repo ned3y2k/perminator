@@ -7,7 +7,6 @@
 
 namespace lib\db\query\mapper\node;
 
-if(!defined('BITMOBILE')) define('BITMOBILE', null);
 require_once getenv('PROJECT_LOCATION') . '/lib/init.php';
 
 use classes\database\query\mapper\DynamicQueryContext;

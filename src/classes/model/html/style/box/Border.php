@@ -1,8 +1,6 @@
 <?php
 namespace classes\model\html\style\box;
 
-if (! defined ( 'BITMOBILE' )) throw new \LogicException('not defined BITMOBILE');
-
 class Border {
 	const NONE = 'none';
 	const DOTTED = 'dotted';

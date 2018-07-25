@@ -1,6 +1,5 @@
 <?php
 namespace classes\model\html\style\box;
-if (! defined ( 'BITMOBILE' )) throw new \LogicException('not defined BITMOBILE');
 
 class Padding {
 	public $top;

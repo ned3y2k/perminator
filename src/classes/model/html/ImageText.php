@@ -4,8 +4,6 @@ namespace classes\model;
 use classes\model\html\style\box\Padding;
 use classes\model\html\style\Color;
 
-if (!defined('BITMOBILE')) throw new \LogicException('not defined BITMOBILE');
-
 class ImageText {
 	private $minWidth = 500;
 

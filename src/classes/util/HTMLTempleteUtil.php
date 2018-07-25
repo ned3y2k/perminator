@@ -1,6 +1,5 @@
 <?php
 namespace classes\util;
-if (! defined ( 'BITMOBILE' )) throw new \LogicException('not defined BITMOBILE');
 
 class HTMLTempleteUtil {
 	static function errorMsg($msg) {

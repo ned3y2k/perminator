@@ -12,7 +12,6 @@ use app\classes\common\pool\MysqliPool;
 use classes\database\query\mapper\behavior\DynamicQueryMysqlBehavior;
 use classes\test\BitTestCase;
 
-if (!defined('BITMOBILE')) define('BITMOBILE', null);
 require_once getenv('PROJECT_LOCATION') . '/lib/init.php';
 
 class TestDynamicQueryMysqlBehavior extends BitTestCase {

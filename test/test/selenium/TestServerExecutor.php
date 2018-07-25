@@ -11,7 +11,6 @@ namespace test\selenium;
 use classes\test\BitTestCase;
 use classes\test\selenium\ServerExecutor;
 
-if(!defined('BITMOBILE')) define('BITMOBILE', null);
 require_once getenv('PROJECT_LOCATION') .'/lib/init.php';
 
 class TestServerExecutor extends BitTestCase {

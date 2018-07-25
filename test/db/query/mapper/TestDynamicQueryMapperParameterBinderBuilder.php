@@ -10,7 +10,6 @@ namespace lib\db\query\mapper;
 use classes\database\query\mapper\DynamicQueryMapperParameterBinderBuilder;
 use classes\test\BitTestCase;
 
-if(!defined('BITMOBILE')) define('BITMOBILE', null);
 require_once getenv('PROJECT_LOCATION') . '/lib/init.php';
 
 class TestDynamicQueryMapperParameterBinderBuilder extends BitTestCase {

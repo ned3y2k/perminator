@@ -12,7 +12,6 @@ use classes\database\query\mapper\node\QueryNodeIf;
 use classes\database\query\mapper\node\QueryTextNode;
 use classes\test\BitTestCase;
 
-if(!defined('BITMOBILE')) define('BITMOBILE', null);
 require_once getenv('PROJECT_LOCATION') . '/lib/init.php';
 
 /**
