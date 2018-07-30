@@ -37,6 +37,7 @@ class DirConstantsInitializer implements Initializer {
 	private function initDirConstants() {
 		/** 웹 사이트 사용자 업로드 파일 경로 */
 		define('_DIR_USR_', _APP_ROOT_ . 'usr' . DIRECTORY_SEPARATOR);
+		define('_URL_USR_', '/usr/');
 
 		/** 사이트 파일 시스템 저장 변수 경로 */
 		define('_DIR_VAR_', _APP_ROOT_ . 'var' . DIRECTORY_SEPARATOR);
@@ -62,6 +63,7 @@ class DirConstantsInitializer implements Initializer {
 
 		/** 웹 사이트 사용자 업로드 파일 경로 */
 		define('_DIR_USR_', _DIR_TEST_ROOT_ . 'usr' . DIRECTORY_SEPARATOR);
+		define('_URL_USR_', '/test/usr/');
 
 		/** 사이트 파일 시스템 저장 변수 경로 */
 		define('_DIR_VAR_', _DIR_TEST_ROOT_ . 'var' . DIRECTORY_SEPARATOR);

@@ -54,4 +54,27 @@ class Directory {
 
 		return str_replace($root, '', $path);
 	}
+
+	/**
+	 * 하위 디렉토리나 파일까지 제거
+	 *
+	 * @param string $dir
+	 * @param bool $deleteRootToo true: 대상 디렉토리까지 삭제, false: 대상 디렉토리 하위 내용만 삭제
+	 */
+	public static function recursiveUnlink($dir, $deleteRootToo = true) {
+		if (! file_exists ( $dir ) || ! $dh = @opendir ( $dir )) { return; }
+
+		while ( false !== ($path = readdir ( $dh )) ) {
+			if ($path == '.' || $path == '..') continue;
+			if (! @unlink ( $dir . DIRECTORY_SEPARATOR . $path )) {
+				self::recursiveUnlink ( $dir . DIRECTORY_SEPARATOR . $path, true );
+				@rmdir($dir . DIRECTORY_SEPARATOR . $path);
+			}
+		}
+
+		closedir ( $dh );
+
+		if ($deleteRootToo) @rmdir ( $dir );
+		return;
+	}
 }
