@@ -8,6 +8,8 @@
 namespace classes\context;
 
 
+use classes\exception\http\AlreadyHeadersSentException;
+
 class ResponseContext {
 	private $contextType     = "text/html";
 	private $charset         = "utf-8";
@@ -31,7 +33,12 @@ class ResponseContext {
 	 */
 	public function putRawHeader(string $string, bool $replace = true, $http_response_code = null) {
 		if (!TEST) {
+			if(headers_sent()) {
+				throw new AlreadyHeadersSentException($string, $replace, $http_response_code);
+			}
+
 			header($string, $replace, $http_response_code);
+
 		} else {
 			printf('%s %s %s\n', $string, $replace ? 'true' : 'false', $http_response_code ?? 'null');
 		}
