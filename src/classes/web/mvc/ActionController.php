@@ -8,13 +8,13 @@
 
 namespace classes\web\mvc;
 
-
-use classes\context\ApplicationContext;
-use classes\context\IApplicationContext;
-use classes\context\RequestContext;
-use classes\exception\http\HTTPResponseException;
-use classes\exception\mvc\ActionControllerResponseException;
-use classes\web\response\HttpResponse;
+use classes\{
+	context\IApplicationContext,
+	context\RequestContext,
+	exception\http\HTTPResponseException,
+	exception\mvc\ActionControllerResponseException,
+	web\response\HttpResponse
+};
 
 abstract class ActionController implements IController {
 	/** @var IApplicationContext */
@@ -114,10 +114,10 @@ abstract class ActionController implements IController {
 
 	/**
 	 * @param $response
-	 * @param ApplicationContext $applicationContext
+	 * @param IApplicationContext $applicationContext
 	 * @return HttpResponse
 	 */
-	public static function procControllerResult($response, ApplicationContext $applicationContext): HttpResponse {
+	public static function procControllerResult($response, IApplicationContext $applicationContext): HttpResponse {
 		if ($response instanceof PageBuilder) {
 			return $response->display($applicationContext->getRequestContext());
 		} elseif (is_string($response)) {
