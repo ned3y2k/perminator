@@ -5,7 +5,7 @@ use classes\{
 	web\dispatch\executor\RequestExecutor,
 	web\dispatch\executor\TestRequestExecutor,
 	web\dispatch\resolver\IDispatcherResolver,
-	web\HttpResponse
+	web\response\HttpResponse
 };
 
 /**

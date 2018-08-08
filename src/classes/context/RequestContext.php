@@ -7,6 +7,7 @@
 
 namespace classes\context;
 
+use classes\lang\ArrayUtil;
 
 class RequestContext
 {
@@ -31,6 +32,11 @@ class RequestContext
 		return $this->requestSession;
 	}
 
+	/**
+	 * 연결 스키마를 돌려준다.
+	 * @link http://php.net/manual/en/function.http-build-url.php#114753
+	 * @return string http https
+	 */
 	public function getScheme(): string { return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http'; }
 
 	public function getContentType() { return $_SERVER["CONTENT_TYPE"]; }
@@ -78,5 +84,17 @@ class RequestContext
 
 		if ($trim) return array_key_exists($key, $_GET) ? $this->requestParamTrim($_GET [$key], $defaultValue) : $defaultValue;
 		else return array_key_exists($key, $_GET) ? $_GET [$key] : $defaultValue;
+	}
+
+
+	/**
+	 * 해당 인코딩(charset이 아닌 압축)을 지원하는지 여부<br>
+	 * request_accept_encoding('gzip')
+	 * @param $encoding
+	 *
+	 * @return bool
+	 */
+	public function hasAcceptEncoding($encoding) {
+		return stripos(ArrayUtil::getValue($_SERVER, 'HTTP_ACCEPT_ENCODING'), $encoding) !== false;
 	}
 }

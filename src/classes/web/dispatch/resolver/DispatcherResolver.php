@@ -9,14 +9,16 @@
 namespace classes\web\dispatch\resolver;
 
 use ApplicationContextPool;
-use classes\web\dispatch\executor\ControllerExecutor;
-use classes\web\dispatch\factory\ResponseFactory;
-use classes\web\dispatch\interceptor\InterceptorManager;
-use classes\web\dispatch\resolver\clazz\IControllerClassNameResolver;
-use classes\web\HttpResponse;
-use classes\web\IInterceptorFinder;
-use classes\web\mvc\IController;
-use classes\web\mvc\IExceptionHandledController;
+use classes\{
+	web\dispatch\executor\ControllerExecutor,
+	web\dispatch\factory\DispatcherResponseFactory,
+	web\dispatch\interceptor\InterceptorManager,
+	web\dispatch\resolver\clazz\IControllerClassNameResolver,
+	web\IInterceptorFinder,
+	web\mvc\IController,
+	web\mvc\IExceptionHandledController,
+	web\response\HttpResponse
+};
 
 
 /**
@@ -43,7 +45,7 @@ class DispatcherResolver implements IDispatcherResolver {
 		$this->applicationContext = ApplicationContextPool::get();
 		$this->controllerClassNameResolver = $controllerClassNameResolver;
 		$this->interceptorManager = new InterceptorManager();
-		$this->responseFactory = new ResponseFactory($this->applicationContext, $this->interceptorManager);
+		$this->responseFactory = new DispatcherResponseFactory($this->applicationContext, $this->interceptorManager);
 		$this->controllerExecutor = new ControllerExecutor($this->applicationContext, $controllerClassNameResolver);
 	}
 

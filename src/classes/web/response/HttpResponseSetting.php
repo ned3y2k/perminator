@@ -6,7 +6,7 @@
  * 시간: 오후 4:25
  */
 
-namespace classes\web;
+namespace classes\web\response;
 
 
 /**

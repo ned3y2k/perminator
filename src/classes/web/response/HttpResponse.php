@@ -5,10 +5,11 @@
  * 일자: 14. 9. 12
  * 시간: 오전 9:39
  */
-namespace classes\web;
+namespace classes\web\response;
 
-use classes\lang\ArrayUtil;
-use classes\lang\ObjectUtil;
+use classes\{
+	lang\ArrayUtil, lang\ObjectUtil
+};
 
 if(!defined('HTTP_REDIRECT_PERM')) {
 	/**

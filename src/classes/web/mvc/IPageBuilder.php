@@ -2,9 +2,12 @@
 
 namespace classes\web\mvc;
 
-use classes\model\html\HeadElement;
-use classes\web\HttpResponse;
-use classes\webpage\menu\MenuContainer;
+use classes\{
+	context\RequestContext,
+	model\html\HeadElement,
+	web\response\HttpResponse,
+	webpage\menu\MenuContainer
+};
 
 /**
  * Interface IPageBuilder
@@ -12,7 +15,7 @@ use classes\webpage\menu\MenuContainer;
  * @package classes\web\mvc
  */
 interface IPageBuilder {
-	public function display(): HttpResponse;
+	public function display(RequestContext $requestContext): HttpResponse;
 
 	/**
 	 * @param HeadElement $headElement
@@ -59,7 +62,7 @@ interface IPageBuilder {
 
 	/**
 	 * @param string[] $queries (string=>string)
-	 * @param string   $url
+	 * @param string $url
 	 *
 	 * @return string
 	 */

@@ -10,8 +10,8 @@ namespace classes\web\dispatch;
 
 use classes\web\dispatch\executor\IRequestExecutor;
 use classes\web\dispatch\resolver\IDispatcherResolver;
-use classes\web\HttpResponse;
 use classes\web\IInterceptorFinder;
+use classes\web\response\HttpResponse;
 
 /**
  * Class Dispatcher

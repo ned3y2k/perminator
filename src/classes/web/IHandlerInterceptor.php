@@ -8,7 +8,10 @@
 
 namespace classes\web;
 
-use classes\web\mvc\IController;
+use classes\{
+	web\mvc\IController,
+	web\response\HttpResponse
+};
 
 interface IHandlerInterceptor {
 	/**

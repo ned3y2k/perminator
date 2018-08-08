@@ -9,22 +9,21 @@
 namespace classes\web\mvc;
 
 
+use classes\context\ApplicationContext;
 use classes\context\IApplicationContext;
 use classes\context\RequestContext;
 use classes\exception\http\HTTPResponseException;
 use classes\exception\mvc\ActionControllerResponseException;
-use classes\web\HttpResponse;
+use classes\web\response\HttpResponse;
 
-abstract class ActionController implements IController
-{
+abstract class ActionController implements IController {
 	/** @var IApplicationContext */
 	private $applicationContext;
 	/** @var RequestContext */
 	private $requestContext;
 
 	/** @return string[] */
-	static function requireLibs()
-	{
+	static function requireLibs() {
 		return array('func/request');
 	}
 
@@ -33,27 +32,23 @@ abstract class ActionController implements IController
 	/**
 	 * @return HttpResponse
 	 */
-	final function handleRequest(): HttpResponse
-	{
+	final function handleRequest(): HttpResponse {
 		$this->beforeHandleRequest();
 		$actionName = $this->requestContext->getParam($this->getActionParamName(), null);
 
-		return self::procControllerResult($this->doResponseDispatch($actionName));
+		return self::procControllerResult($this->doResponseDispatch($actionName), $this->getApplicationContext());
 	}
 
-	protected function beforeHandleRequest()
-	{
+	protected function beforeHandleRequest() {
 	}
 
 	/** @return string 재정의 해서 action param을 바꿀수 있다. */
-	protected function getActionParamName()
-	{
+	protected function getActionParamName() {
 		return 'action';
 	}
 
 	/** @return string */
-	public final function getAction()
-	{
+	public final function getAction() {
 		return $this->requestContext->getParam($this->getActionParamName());
 	}
 
@@ -62,8 +57,7 @@ abstract class ActionController implements IController
 	 * @param HttpResponse|IPageBuilder $response
 	 * @return HttpResponse|IPageBuilder
 	 */
-	private function checkResponse($actionName, $response)
-	{
+	private function checkResponse($actionName, $response) {
 		if (empty($actionName))
 			$actionName = 'defaultHandle';
 
@@ -87,8 +81,7 @@ abstract class ActionController implements IController
 	 * @param string $relativePath 스크립 상대 경로
 	 * @return string
 	 */
-	public final function createActionUrl($action = null, array $args = null, $scheme = null, $port = null, $relativePath = null)
-	{
+	public final function createActionUrl($action = null, array $args = null, $scheme = null, $port = null, $relativePath = null) {
 		if ($scheme == null)
 			$scheme = $this->requestContext->getScheme();
 		if ($port == null)
@@ -121,12 +114,12 @@ abstract class ActionController implements IController
 
 	/**
 	 * @param $response
+	 * @param ApplicationContext $applicationContext
 	 * @return HttpResponse
 	 */
-	public static function procControllerResult($response): HttpResponse
-	{
+	public static function procControllerResult($response, ApplicationContext $applicationContext): HttpResponse {
 		if ($response instanceof PageBuilder) {
-			return $response->display();
+			return $response->display($applicationContext->getRequestContext());
 		} elseif (is_string($response)) {
 			if (strpos($response, "redirect:") === 0) {
 				if (strlen($response) == 9) throw new \InvalidArgumentException("invalid redirect url");
@@ -142,14 +135,12 @@ abstract class ActionController implements IController
 	}
 
 	/** @return IApplicationContext */
-	protected final function getApplicationContext()
-	{
+	protected final function getApplicationContext() {
 		return $this->applicationContext;
 	}
 
 	/** @param IApplicationContext $applicationContext */
-	final function setApplicationContext(IApplicationContext $applicationContext)
-	{
+	final function setApplicationContext(IApplicationContext $applicationContext) {
 		$this->applicationContext = $applicationContext;
 		$this->requestContext = $this->applicationContext->getRequestContext();
 	}
@@ -158,8 +149,7 @@ abstract class ActionController implements IController
 	 * 접근 차단됨
 	 * @return HttpResponse
 	 */
-	protected function showAccessDenied()
-	{
+	protected function showAccessDenied() {
 		$res = new HttpResponse();
 		$res->getSetting()->compress = true;
 		$res->setBody('403 Forbidden');
@@ -172,8 +162,7 @@ abstract class ActionController implements IController
 	 * @param $response
 	 * @return bool
 	 */
-	private function validResponse($response)
-	{
+	private function validResponse($response) {
 		return
 			($response instanceof HttpResponse)
 			|| ($response instanceof PageBuilder)
@@ -184,8 +173,7 @@ abstract class ActionController implements IController
 	 * @param $actionName
 	 * @return HttpResponse|IPageBuilder
 	 */
-	private function doResponseDispatch($actionName)
-	{
+	private function doResponseDispatch($actionName) {
 		$req = $this->applicationContext->getRequestContext();
 
 		if (!$actionName) {

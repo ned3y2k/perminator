@@ -1,13 +1,16 @@
 <?php
 namespace classes\web\mvc;
 
-use app\classes\common\api\response\StringResultResponseFactory;
-use classes\exception\mvc\TPLFileNotFoundException;
-use classes\lang\ArrayStringBuilder;
-use classes\lang\ArrayUtil;
-use classes\model\html\HeadElement;
-use classes\web\HttpResponse;
-use classes\webpage\menu\MenuContainer;
+use classes\{
+	context\RequestContext,
+	exception\mvc\TPLFileNotFoundException,
+	lang\ArrayStringBuilder,
+	lang\ArrayUtil,
+	model\html\HeadElement,
+	web\response\HttpResponse,
+	web\response\StringResultResponse,
+	webpage\menu\MenuContainer
+};
 
 require_once 'func/page_builder.php';
 
@@ -176,7 +179,7 @@ abstract class PageBuilder implements IPageBuilder {
 	/** @return MenuContainer */
 	public function getMenuContainer() { return $this->menuContainer; }
 
-	public function display(): HttpResponse {
+	public function display(RequestContext $requestContext): HttpResponse {
 		foreach ($this->preActions as $preAction) {
 			$preAction->execute($this);
 		}
@@ -195,11 +198,11 @@ abstract class PageBuilder implements IPageBuilder {
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		if(false && ini_get('output_compression') !== '1' && ini_get('zlib.output_compression') !== 1 && $this->isSupportedCompress()) {
+		if(false && ini_get('output_compression') !== '1' && ini_get('zlib.output_compression') !== 1 && $this->isSupportedCompress($requestContext)) {
 			getApplicationContext()->getResponseContext()->setContentEncoding('gzip');
-			return StringResultResponseFactory::createHtmlPage(gzencode($content), false);
+			return StringResultResponse::createHtmlPage(gzencode($content), false);
 		} else {
-			return StringResultResponseFactory::createHtmlPage($content, false);
+			return StringResultResponse::createHtmlPage($content, false);;
 		}
 	}
 
@@ -231,9 +234,12 @@ abstract class PageBuilder implements IPageBuilder {
 		return $url . '?' . implode('&', $temp);
 	}
 
-	/** @return bool */
-	private function isSupportedCompress() {
-		load_lib('func/request');
-		return $this->compress && request_accept_encoding('gzip');
+	/**
+	 * @param RequestContext $requestContext
+	 * @return bool
+	 */
+	private function isSupportedCompress(RequestContext $requestContext) {
+
+		return $this->compress && $requestContext->hasAcceptEncoding('gzip');
 	}
 }

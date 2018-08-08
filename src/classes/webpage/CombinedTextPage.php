@@ -10,11 +10,10 @@ namespace classes\webpage;
 
 use classes\io\exception\FileNotFoundException;
 use classes\io\File;
-use classes\web\HttpResponse;
+use classes\web\response\HttpResponse;
 
 class CombinedTextPage {
 	private $files = array();
-	/** @var \classes\web\HttpResponse */
 	private $response;
 
 	/**

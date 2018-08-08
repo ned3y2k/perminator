@@ -8,8 +8,10 @@
 
 namespace classes\web\mvc;
 
-use classes\context\IApplicationContext;
-use classes\web\HttpResponse;
+use classes\{
+	context\IApplicationContext,
+	web\response\HttpResponse
+};
 
 interface IExceptionHandledController extends IController {
 	static function handleException(IApplicationContext $applicationContext, \Throwable $throwable): HttpResponse;

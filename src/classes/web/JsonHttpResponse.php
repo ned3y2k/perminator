@@ -9,7 +9,10 @@
 namespace classes\web;
 
 
-use classes\api\model\JSONResult;
+use classes\{
+	api\model\JSONResult,
+	web\response\HttpResponse
+};
 
 class JsonHttpResponse extends HttpResponse {
 

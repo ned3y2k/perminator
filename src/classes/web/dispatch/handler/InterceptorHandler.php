@@ -8,20 +8,21 @@
 
 namespace classes\web\dispatch\handler;
 
-
-use classes\web\HttpResponse;
-use classes\web\IHandlerInterceptor;
-use classes\web\mvc\IController;
+use classes\web\{
+	IHandlerInterceptor,
+	mvc\IController,
+	response\HttpResponse
+};
 
 class InterceptorHandler {
 	/**
-	 * @param IHandlerInterceptor[] $foundInterceptors
 	 * @param IController           $controller
+	 * @param IHandlerInterceptor[] $foundInterceptors
 	 *
 	 * @return HttpResponse|null
 	 * @throws \Exception
 	 */
-	public function preHandles(array $foundInterceptors = null, IController $controller): ?HttpResponse {
+	public function preHandles(IController $controller, array $foundInterceptors = null): ?HttpResponse {
 		if (!$foundInterceptors) {
 			foreach ($foundInterceptors as $foundInterceptor) {
 				$flag = $foundInterceptor->preHandle($controller, $response);

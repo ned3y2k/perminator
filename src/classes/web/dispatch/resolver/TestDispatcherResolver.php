@@ -8,18 +8,20 @@
 
 namespace classes\web\dispatch\resolver;
 
-use classes\cache\CacheManagerPool;
-use classes\context\IApplicationContext;
-use classes\web\dispatch\factory\ControllerFactory;
-use classes\web\dispatch\handler\PostHandler;
-use classes\web\dispatch\resolver\clazz\IControllerClassNameResolver;
-use classes\web\HttpResponse;
-use classes\web\IHandlerInterceptor;
-use classes\web\IInterceptorFinder;
-use classes\web\mvc\IController;
-use classes\web\mvc\IPageBuilder;
-use classes\web\mvc\PageBuilder;
-use LibraryLoaderPool;
+use classes\{
+	cache\CacheManagerPool,
+	context\IApplicationContext,
+	pool\LibraryLoaderPool,
+	web\dispatch\factory\ControllerFactory,
+	web\dispatch\handler\PostHandler,
+	web\dispatch\resolver\clazz\IControllerClassNameResolver,
+	web\IHandlerInterceptor,
+	web\IInterceptorFinder,
+	web\mvc\IController,
+	web\mvc\IPageBuilder,
+	web\mvc\PageBuilder,
+	web\response\HttpResponse
+};
 
 /**
  * Class TestDispatchResolver
@@ -76,7 +78,6 @@ class TestDispatcherResolver implements IDispatcherResolver {
 		$applicationContext = getApplicationContext();
 
 		$response = null;
-		$this->predictedLoadLibrary($cacheName, $fullName);
 
 		$controller = is_object($className)
 			? $this->resolveLifeCycle($className, $applicationContext)
@@ -95,22 +96,6 @@ class TestDispatcherResolver implements IDispatcherResolver {
 
 		return $response;
 	}
-
-	/**
-	 * @param $cacheName
-	 * @param $fullName
-	 *
-	 * @throws \Exception
-	 */
-	private function predictedLoadLibrary($cacheName, $fullName) {
-		LibraryLoaderPool::get()->preLoad(CacheManagerPool::getInstance()->get($cacheName));
-
-		/** @var IController $fullName class */
-		$libs = $fullName::requireLibs();
-		if (is_array($libs)) call_user_func_array('load_libs', $libs);
-		elseif ($libs !== null) load_lib($libs);
-	}
-
 
 	/**
 	 * @param IController $controller

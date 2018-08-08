@@ -8,8 +8,10 @@
 
 namespace classes\web\mvc;
 
-use classes\exception\mvc\TPLFileNotFoundException;
-use classes\io\exception\FileNotFoundException;
+use classes\{
+	exception\mvc\TPLFileNotFoundException,
+	io\exception\FileNotFoundException
+};
 
 /**
  * Class ScriptSubPage
@@ -35,7 +37,7 @@ class ScriptSubPage extends SubPage {
 	 * 페이지 내용을 출력한다.
 	 * @return string
 	 */
-	public function __toString() {
+	public function toString() {
 		ob_start();
 		try {
 			extract($this->content);
@@ -51,5 +53,9 @@ class ScriptSubPage extends SubPage {
 		$result = ob_get_clean();
 
 		return $result;
+	}
+
+	public function __toString() {
+		return $this->toString();
 	}
 }

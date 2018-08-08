@@ -13,8 +13,8 @@ use classes\context\IApplicationContext;
 use classes\io\exception\FileNotFoundException;
 use classes\web\dispatch\factory\ControllerFactory;
 use classes\web\dispatch\resolver\clazz\IControllerClassNameResolver;
-use classes\web\HttpResponse;
 use classes\web\mvc\IPageBuilder;
+use classes\web\response\HttpResponse;
 
 class ControllerExecutor {
 	private $nameResolver;

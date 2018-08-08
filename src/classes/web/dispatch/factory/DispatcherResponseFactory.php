@@ -9,15 +9,17 @@
 namespace classes\web\dispatch\factory;
 
 
-use classes\context\IApplicationContext;
-use classes\web\dispatch\handler\InterceptorHandler;
-use classes\web\dispatch\handler\PostHandler;
-use classes\web\dispatch\interceptor\InterceptorManager;
-use classes\web\HttpResponse;
-use classes\web\mvc\IController;
-use classes\web\mvc\PageBuilder;
+use classes\{
+	context\IApplicationContext,
+	web\dispatch\handler\InterceptorHandler,
+	web\dispatch\handler\PostHandler,
+	web\dispatch\interceptor\InterceptorManager,
+	web\mvc\IController,
+	web\mvc\PageBuilder,
+	web\response\HttpResponse
+};
 
-class ResponseFactory {
+class DispatcherResponseFactory {
 	/**
 	 * @var InterceptorManager
 	 */
@@ -51,7 +53,7 @@ class ResponseFactory {
 	 */
 	public function create(IController $controller): HttpResponse {
 		$foundInterceptors = $this->interceptorManager->findInterceptors();
-		$response = $this->interceptorHandler->preHandles($foundInterceptors, $controller);
+		$response = $this->interceptorHandler->preHandles($controller, $foundInterceptors);
 
 		if($response)
 			return $response;

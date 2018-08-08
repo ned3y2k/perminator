@@ -8,13 +8,14 @@
 
 namespace classes\web\dispatch\handler;
 
-
-use classes\context\IApplicationContext;
-use classes\web\HttpResponse;
-use classes\web\IHandlerInterceptor;
-use classes\web\mvc\IController;
-use classes\web\mvc\IPageBuilder;
-use classes\web\mvc\PageBuilder;
+use classes\{
+	context\IApplicationContext,
+	web\IHandlerInterceptor,
+	web\mvc\IController,
+	web\mvc\IPageBuilder,
+	web\mvc\PageBuilder,
+	web\response\HttpResponse
+};
 
 class PostHandler {
 	/**
@@ -90,6 +91,6 @@ class PostHandler {
 				}
 		}
 
-		return $pageBuilder->display();
+		return $pageBuilder->display($this->applicationContext->getRequestContext());
 	}
 }
