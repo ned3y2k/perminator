@@ -54,7 +54,7 @@ XML;
 </CallStack>
 XML;
 
-	/** @param \Exception $exception 예외를 xml로 출력 */
+	/** @param \Throwable $exception 예외를 xml로 출력 */
 	public function publish(\Throwable $exception) {
 		$exceptionStacksStrBuilder = new ArrayStringBuilder();
 		$callStacksStrBuilder      = new ArrayStringBuilder();
@@ -252,7 +252,7 @@ XML;
 	}
 
 	/**
-	 * @param \Exception $exception
+	 * @param \Throwable $exception
 	 * @return string
 	 */
 	private function createExceptionLogFileName(\Throwable $exception) {

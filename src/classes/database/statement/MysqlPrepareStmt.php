@@ -4,6 +4,7 @@ namespace classes\database\statement;
 use classes\database\IDatabaseStatement;
 use classes\io\exception\DirectoryNotFoundException;
 use classes\io\exception\PermissionException;
+use classes\util\DevUtil;
 use classes\util\object\ObjectBuilderUtil;
 
 
@@ -180,12 +181,11 @@ class MysqlPrepareStmt implements IDatabaseStatement {
 	 */
 	private function checkStmtError() {
 		if ($this->getErrno()) {
-			load_lib('func/dev');
 			$msg = '--------------' . date('Y-m-d H:i:s') . "--------------------\n";
 			$msg .= $this->query . "\n";
 			$msg .= "-----------------------------------------------------\n";
 
-			dev_log_simpled(date('Ymd') . '.log', $msg, true);
+			DevUtil::logSimpled(date('Ymd') . '.log', $msg, true);
 			throw new MysqlPrepareStmtException($this->getError(), $this->getErrno(), $this);
 		}
 	}
@@ -335,10 +335,9 @@ class MysqlPrepareStmt implements IDatabaseStatement {
 		}
 
 		if (defined('_VERBOSE_') && _VERBOSE_ == true) {
-			load_lib('func/dev');
 			$msg = '--------------' . date('Y-m-d H:i:s') . "--------------------\n";
 			$msg .= $tmpQuery . "\n";
-			dev_log_simpled(date('Ymd') . '.log', $msg, true);
+			DevUtil::logSimpled(date('Ymd') . '.log', $msg, true);
 		}
 
 		$this->query = $tmpQuery;

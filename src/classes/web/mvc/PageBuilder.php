@@ -202,7 +202,7 @@ abstract class PageBuilder implements IPageBuilder {
 			getApplicationContext()->getResponseContext()->setContentEncoding('gzip');
 			return StringResultResponse::createHtmlPage(gzencode($content), false);
 		} else {
-			return StringResultResponse::createHtmlPage($content, false);;
+			return StringResultResponse::createHtmlPage($content, false);
 		}
 	}
 

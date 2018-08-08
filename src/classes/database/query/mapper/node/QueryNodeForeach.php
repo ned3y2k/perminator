@@ -53,7 +53,7 @@ class QueryNodeForeach implements IQueryNode {
 
 	public function __toString() {
 		if (!array_key_exists('collection', $this->attributes)) {
-			throw new QueryNodeAttributeStatementException("not found collection attribute");
+			throw new QueryNodeAttributeStatementException("not found collection attribute", '');
 		}
 		$collectionName = $this->attributes['collection'];
 		$separator      = array_key_exists('separator', $this->attributes) ? $this->attributes['separator'] : '';
@@ -94,7 +94,7 @@ class QueryNodeForeach implements IQueryNode {
 
 			$looper = new QueryNodeForeachItemLooper($childNodeToStringRetriever, str_replace('#', '', $this->attributes['item']), $separator, $this->context, $collection);
 		} else {
-			throw new QueryNodeAttributeStatementException("Only item is available");
+			throw new QueryNodeAttributeStatementException("Only item is available", '');
 		}
 
 		$looperResult = $looper->__toString();

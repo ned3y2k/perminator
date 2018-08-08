@@ -15,7 +15,6 @@ use classes\{
 	web\dispatch\handler\PostHandler,
 	web\dispatch\interceptor\InterceptorManager,
 	web\mvc\IController,
-	web\mvc\PageBuilder,
 	web\response\HttpResponse
 };
 
@@ -66,17 +65,5 @@ class DispatcherResponseFactory {
 			->send();
 
 		return $response;
-	}
-
-
-	/** @param PageBuilder|HttpResponse $response */
-	private function displayPreHandleResponse($response) {
-		if ($response instanceof PageBuilder) {
-			$response->display();
-		} elseif ($response instanceof HttpResponse) {
-			$response->send();
-		} else {
-			throw new \InvalidArgumentException('Ambiguous response type. Allow only \classes\web\mvc\PageBuilder or \classes\web\HttpResponse');
-		}
 	}
 }

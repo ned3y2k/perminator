@@ -28,10 +28,6 @@ class JsonHttpResponse extends HttpResponse {
 		$this->setBody($result);
 	}
 
-	public function setHeader($name, $value, $replace = true) {
-		throw new \UnsupportedOperationException();
-	}
-
 	public function setContentType($contentType) {
 		throw new \UnsupportedOperationException();
 	}

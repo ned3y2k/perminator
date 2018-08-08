@@ -10,7 +10,6 @@ namespace classes\handler\throwable;
 use classes\exception\http\HTTPResponseException;
 use classes\lang\ArrayUtil;
 use classes\util\ThrowableLogger;
-use classes\web\XMLExceptionPrinter;
 
 class DefaultThrowableHandler implements IThrowableHandler {
 	/** @var string[] 예외 페이지들 */

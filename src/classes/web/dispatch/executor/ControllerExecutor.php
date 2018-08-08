@@ -34,7 +34,6 @@ class ControllerExecutor {
 	/**
 	 * @param $controllerName
 	 * @return HttpResponse|IPageBuilder
-	 * @throws FileNotFoundException
 	 */
 	public function execute($controllerName) {
 		$controller = $this->factory->createControllerInstance($controllerName, $this->context);

@@ -37,11 +37,11 @@ class TestArrayElementExists extends BitTestCase {
 
 	public function testTrue() {
 		$selector = ['item5852875a641e5', 'list', 'var1'];
-		$this->assertTrue(ArrayUtil::existsMultiDimensionalKey($this->arr, $selector));
+		$this->assertTrue(ArrayUtil::existsMultiDimensionalKey($selector, $this->arr));
 	}
 
 	public function testFalse() {
 		$selector = ['item5852875a6424c', 'var', 'a1'];
-		$this->assertFalse(ArrayUtil::existsMultiDimensionalKey($this->arr, $selector));
+		$this->assertFalse(ArrayUtil::existsMultiDimensionalKey($selector, $this->arr));
 	}
 }

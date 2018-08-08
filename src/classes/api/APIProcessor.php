@@ -42,6 +42,10 @@ abstract class APIProcessor {
 	}
 
 	protected $jsonRequestData;
+
+	/**
+	 * @return mixed
+	 */
 	protected final function getJsonRequestData() {
 		if($this->jsonRequestData)
 			return $this->jsonRequestData;

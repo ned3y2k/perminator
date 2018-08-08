@@ -12,8 +12,6 @@ use classes\database\query\mapper\node\QueryNodeIf;
 use classes\database\query\mapper\node\QueryTextNode;
 use classes\test\BitTestCase;
 
-require_once getenv('PROJECT_LOCATION') . '/lib/init.php';
-
 /**
  * Class TestQueryNodeIf
  * @package lib\db\query\mapper

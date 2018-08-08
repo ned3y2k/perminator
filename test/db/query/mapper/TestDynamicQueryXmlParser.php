@@ -10,8 +10,6 @@ namespace lib\db\query\mapper;
 use classes\database\query\mapper\parser\XmlParser;
 use classes\test\BitTestCase;
 
-require_once getenv('PROJECT_LOCATION') . '/lib/init.php';
-
 class TestDynamicQueryXmlParser extends BitTestCase {
 	const XML_PATH = __DIR__ . '/TestDynamicQueryXmlParser.xml';
 	private $xml = self::XML_PATH;

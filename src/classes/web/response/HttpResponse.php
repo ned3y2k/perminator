@@ -193,7 +193,7 @@ class HttpResponse {
 	 * @param bool $replace
 	 * @return bool
 	 */
-	public function setHeader ( $name, $value, $replace = true ) { throwNewUnimplementedException(); }
+	public function setHeader ( $name, $value, $replace = true ): bool { throwNewUnimplementedException(); }
 
 	/**
 	 * @param string $name
@@ -217,7 +217,7 @@ class HttpResponse {
 	 */
 	public function setFile($file) { throwNewUnimplementedException();  return false; }
 	/** @return string */
-	public function getFile() { throwNewUnimplementedException(); }
+	public function getFile(): string { throwNewUnimplementedException(); }
 
 	/**
 	 * @param mixed $data
@@ -225,7 +225,7 @@ class HttpResponse {
 	 */
 	public function setData ( $data ) { throwNewUnimplementedException(); return false; }
 	/** @return string */
-	public function getData() { throwNewUnimplementedException(); }
+	public function getData(): string { throwNewUnimplementedException(); }
 
 	/** @param string $contentType */
 	public function setContentType($contentType) { $this->headers['Content-type'] = $contentType; }
@@ -333,7 +333,6 @@ class HttpResponse {
 
 	/**
 	 * @param int $status
-	 * @return bool
 	 */
 	public function status($status) { $this->status = $status; }
 }

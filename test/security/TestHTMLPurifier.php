@@ -7,8 +7,6 @@
  */
 use classes\test\BitTestCase;
 
-require_once getenv('PROJECT_LOCATION') . '/lib/init.php';
-
 class TestHTMLPurifier extends BitTestCase {
 	public function test_purifier() {
 		\classes\pool\LibraryLoaderPool::getInstance()->load('ext/htmlpurifier-4.6.0/HTMLPurifier.includes');

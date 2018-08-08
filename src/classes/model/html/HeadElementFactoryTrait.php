@@ -11,8 +11,8 @@ namespace classes\model\html;
 
 trait HeadElementFactoryTrait {
 	/**
-	 * @param string ...$src
 	 *
+	 * @param string[] $src
 	 * @return LinkElement[]
 	 */
 	function externCss(string...  $src) {

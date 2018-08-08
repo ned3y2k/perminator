@@ -7,8 +7,6 @@
 
 namespace lib\db\query\mapper\node;
 
-require_once getenv('PROJECT_LOCATION') . '/lib/init.php';
-
 use classes\database\query\mapper\DynamicQueryContext;
 use classes\database\query\mapper\node\QueryNodeForeach;
 use classes\database\query\mapper\node\QueryNodeIf;

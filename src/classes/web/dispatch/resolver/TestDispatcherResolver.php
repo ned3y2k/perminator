@@ -137,7 +137,7 @@ class TestDispatcherResolver implements IDispatcherResolver {
 	/** @param PageBuilder|HttpResponse $response */
 	private function displayPreHandleResponse($response) {
 		if ($response instanceof PageBuilder) {
-			$response->display();
+			$response->display(getApplicationContext()->getRequestContext());
 		} elseif ($response instanceof HttpResponse) {
 			$response->send();
 		} else {

@@ -62,7 +62,7 @@ class MysqliPrepareStmt implements IDatabaseStatement {
 	 *
 	 * @throws \mysqli_sql_exception
 	 * @throws \InvalidArgumentException
-	 * @return \classes\database\statement\MysqliPrepareStmt
+	 * @return MysqliPrepareStmt
 	 */
 	public static function prepare($mysqli, $query, $reusable = false) {
 		if (!($mysqli instanceof \mysqli)) throw new \InvalidArgumentException();
@@ -86,7 +86,7 @@ class MysqliPrepareStmt implements IDatabaseStatement {
 	 * </p>
 	 * @return int false if the attribute is not found, otherwise returns the value of the attribute.
 	 */
-	public function attrGet($attr) { $this->stmt->attr_get($attr); }
+	public function attrGet($attr) { return $this->stmt->attr_get($attr); }
 
 	/**
 	 * Used to modify the behavior of a prepared statement
@@ -152,7 +152,7 @@ class MysqliPrepareStmt implements IDatabaseStatement {
 	 * Closes a prepared statement
 	 * @link http://www.php.net/manual/en/mysqli-stmt.close.php
 	 * @throws \mysqli_sql_exception
-	 * @return \classes\database\statement\MysqliPrepareStmt
+	 * @return MysqliPrepareStmt
 	 */
 	public function close() {
 		if (!$this->stmt->close()) throw new \mysqli_sql_exception('close call fail');
@@ -170,7 +170,7 @@ class MysqliPrepareStmt implements IDatabaseStatement {
 	 * Must be between zero and the total number of rows minus one (0..
 	 * mysqli_stmt_num_rows - 1).
 	 * </p>
-	 * @return \classes\database\statement\MysqliPrepareStmt
+	 * @return MysqliPrepareStmt
 	 */
 	public function dataSeek($offset) {
 		$this->stmt->data_seek($offset);
@@ -181,7 +181,7 @@ class MysqliPrepareStmt implements IDatabaseStatement {
 	/**
 	 * Frees stored result memory for the given statement handle
 	 * @link http://www.php.net/manual/en/mysqli-stmt.free-result.php
-	 * @return \classes\database\statement\MysqliPrepareStmt
+	 * @return MysqliPrepareStmt
 	 */
 	public function freeResult() {
 		$this->stmt->free_result();
@@ -193,17 +193,18 @@ class MysqliPrepareStmt implements IDatabaseStatement {
 	 * Resets a prepared statement
 	 * @link http://www.php.net/manual/en/mysqli-stmt.reset.php
 	 * @throws \mysqli_sql_exception
-	 * @return \classes\database\statement\MysqliPrepareStmt
+	 * @return MysqliPrepareStmt
 	 */
-	public function reset() {
+	public function reset(): MysqliPrepareStmt {
 		if (!$this->stmt->reset()) throw new \mysqli_sql_exception('reset call fail');
+		return $this;
 	}
 
 	/**
 	 * Transfers a result set from a prepared statement
 	 * @link http://www.php.net/manual/en/mysqli-stmt.store-result.php
 	 * @throws \mysqli_sql_exception
-	 * @return \classes\database\statement\MysqliPrepareStmt
+	 * @return MysqliPrepareStmt
 	 */
 	public function storeResult() {
 		if (!$this->stmt->store_result()) throw new \mysqli_sql_exception('storeResult call fail');
@@ -249,7 +250,7 @@ class MysqliPrepareStmt implements IDatabaseStatement {
 	 * @param _ mixed[optional]
 	 *
 	 * @throws \mysqli_sql_exception
-	 * @return \classes\database\statement\MysqliPrepareStmt
+	 * @return MysqliPrepareStmt
 	 */
 	public function bindParam() {
 		/** @noinspection PhpUnusedLocalVariableInspection */

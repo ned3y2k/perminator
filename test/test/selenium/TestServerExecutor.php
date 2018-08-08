@@ -11,8 +11,6 @@ namespace test\selenium;
 use classes\test\BitTestCase;
 use classes\test\selenium\ServerExecutor;
 
-require_once getenv('PROJECT_LOCATION') .'/lib/init.php';
-
 class TestServerExecutor extends BitTestCase {
 	/**
 	 * @throws \Exception

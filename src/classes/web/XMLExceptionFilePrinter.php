@@ -49,7 +49,7 @@ XML;
 XML;
 
 	/**
-	 * @param \Exception $exception
+	 * @param \Throwable $exception
 	 * @throws DirectoryNotFoundException
 	 * @throws FileNotFoundException
 	 * @throws PermissionException

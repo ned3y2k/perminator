@@ -21,15 +21,15 @@ class ArrayUtil {
 	 *              'delta'=>['backpack'=>'notebook'],
 	 *              'prank'=>['shoulderBag'=>'none'],
 	 *        ];
-	 *        echo array_element_select($array, array('charly', 'bag', 'creditCard'));
+	 *        echo array_element_select(array('charly', 'bag', 'creditCard'), $array);
 	 * </code>
 	 *
-	 * @param array|null $array
 	 * @param array      $selectors
+	 * @param array|null $array
 	 *
 	 * @return bool
 	 */
-	public static function existsMultiDimensionalKey(array $array = null, array $selectors) {
+	public static function existsMultiDimensionalKey(array $selectors, array $array = null) {
 		if(!$array && !$selectors)
 			return true;
 		else if(!$array && $selectors)

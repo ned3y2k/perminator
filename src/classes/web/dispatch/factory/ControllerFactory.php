@@ -10,7 +10,7 @@ namespace classes\web\dispatch\factory;
 
 
 use classes\{
-	context\IApplicationContext, io\exception\FileNotFoundException, web\mvc\IController
+	context\IApplicationContext, web\mvc\IController
 };
 
 class ControllerFactory {
@@ -19,7 +19,6 @@ class ControllerFactory {
 	 * @param IApplicationContext $applicationContext
 	 *
 	 * @return IController
-	 * @throws FileNotFoundException
 	 */
 	public function createControllerInstance($fullName, IApplicationContext $applicationContext) {
 		$this->loadAndCheckControllerClass($fullName);
