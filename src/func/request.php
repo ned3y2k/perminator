@@ -1,7 +1,5 @@
 <?php
 
-use classes\lang\ArrayUtil;
-
 
 /**
  * 웹에서 사용하는 사용자 변수를 trim
@@ -244,26 +242,5 @@ function request_method_is_options() { return $_SERVER[ 'REQUEST_METHOD' ] == 'O
  * @return boolean
  */
 function request_method_is_connect() { return $_SERVER[ 'REQUEST_METHOD' ] == 'CONNECT'; }
-
-/**
- * 해당 인코딩(charset이 아닌 압축)을 지원하는지 여부<br>
- * request_accept_encoding('gzip')
- * @param $encoding
- *
- * @return bool
- */
-function request_accept_encoding($encoding) {
-	return stripos(ArrayUtil::getValue($_SERVER, 'HTTP_ACCEPT_ENCODING'), $encoding) !== false;
-}
-
-/**
- * 연결 스키마를 돌려준다.
- * @link http://php.net/manual/en/function.http-build-url.php#114753
- * @return string http https
- */
-function request_scheme()
-{
-	return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-}
 
 request_lib_prepare();

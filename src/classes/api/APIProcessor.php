@@ -36,7 +36,7 @@ abstract class APIProcessor {
 
 	/** @param string $msg 출력 메시지 */
 	protected final function checkSecureLayerConnection($msg = 'https 에서만 접근 가능합니다.') {
-		if(request_scheme() !== 'https' && !$this->applicationContext->getServerEnvironment()->isForceHttp()) {
+		if($this->applicationContext->getRequestContext()->getScheme() !== 'https' && !$this->applicationContext->getServerEnvironment()->isForceHttp()) {
 			throw new \RuntimeException($msg);
 		}
 	}
