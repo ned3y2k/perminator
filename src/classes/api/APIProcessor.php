@@ -55,7 +55,7 @@ abstract class APIProcessor {
 		if(!strtolower($requestContext->compareContentType('application/json')))
 			throw new \RuntimeException('Request Conent type is not application/json');
 
-		$this->jsonRequestData = json_decode($requestContext->rawData());
+		$this->jsonRequestData = json_decode($requestContext->rawRequestPayload());
 		return $this->jsonRequestData;
 	}
 

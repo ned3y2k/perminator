@@ -8,24 +8,21 @@
 namespace classes\test\context;
 
 
+use classes\context\DebugContext;
 use classes\context\IApplicationContext;
 use classes\context\RequestContext;
 use classes\context\ResponseContext;
 use classes\context\SharedUserContext;
 use classes\handler\throwable\IThrowableHandler;
-use classes\io\exception\DirectoryNotFoundException;
-use classes\io\exception\PermissionException;
-use classes\io\File;
-use classes\lang\ArrayUtil;
 use classes\util\ServerEnvironment;
 
-class TestApplicationContext implements IApplicationContext  {
+class TestApplicationContext implements IApplicationContext {
 	/** @var SharedUserContext 사용자 공유 Context */
 	private $sharedUserContext;
-	/** @var ResponseContext */
 	private $responseContext;
-	/** @var RequestContext */
 	private $requestContext;
+	private $debugContext;
+
 	/** @var ServerEnvironment */
 	private $environment;
 	/** @var bool 디버그 여부 */
@@ -46,10 +43,8 @@ class TestApplicationContext implements IApplicationContext  {
 		$this->requestContext    = new RequestContext();
 		$this->sharedUserContext = new SharedUserContext(new \DateTime());
 		$this->environment       = new ServerEnvironment($this);
+		$this->debugContext      = new DebugContext(_APP_ROOT_ . 'debug');
 	}
-
-	/** @return bool */
-	public function isDebug() { return $this->debug; }
 
 	/** @return SharedUserContext */
 	public function getSharedUserContext(): SharedUserContext { return $this->sharedUserContext; }
@@ -61,18 +56,7 @@ class TestApplicationContext implements IApplicationContext  {
 	/** @return ServerEnvironment 서버 환경 */
 	public function getServerEnvironment(): ServerEnvironment { return $this->environment; }
 
-	/**
-	 * 디버그 정보 입력
-	 *
-	 * @param string       $fileName 파일경로
-	 * @param object|mixed $object   기록할 내용
-	 *
-	 * @throws DirectoryNotFoundException
-	 * @throws PermissionException
-	 */
-	public function writeDebugInfo($fileName, $object) {
-		File::appendAllText(_DIR_LOG_PHP_USR_ . $fileName, var_export($object, true), true);
-	}
+	public function getDebugContext(): DebugContext {return $this->debugContext; }
 
 	/**
 	 * 메서드 명 정규화
@@ -90,16 +74,4 @@ class TestApplicationContext implements IApplicationContext  {
 
 	/** @param IThrowableHandler $exceptionHandler */
 	public function setExceptionHandler(IThrowableHandler $exceptionHandler) { $this->exceptionHandler = $exceptionHandler; }
-
-	/**
-	 * @param string|null $key
-	 * @param string      $default 값이 지정되어 있지 않을때 기본 값
-	 *
-	 * @return array|string
-	 */
-	public function getDebugFlag($key = null, $default = null) {
-		if ($key == null) return $this->debugFlags;
-
-		return ArrayUtil::getValue($this->debugFlags, $key, $default);
-	}
 }

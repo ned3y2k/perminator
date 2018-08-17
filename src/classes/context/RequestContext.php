@@ -54,7 +54,39 @@ class RequestContext
 		else return array_key_exists($key, $_COOKIE) ? $_COOKIE [$key] : $defaultValue;
 	}
 
-	public function rawData() {
+
+	/**
+	 * request payload 에서 값을 돌려줌
+	 *
+	 * @param string $key
+	 * @param string $defaultValue
+	 * @param bool   $trim
+	 *
+	 * @return mixed
+	 */
+	function requestPayload($key, $defaultValue = null, $trim = false) {
+		$rawDataArray = $this->requestPayloadArray();
+
+		if ($trim) return array_key_exists($key, $rawDataArray) ? request_user_var_trim($rawDataArray [ $key ], $defaultValue) : $defaultValue;
+		else return array_key_exists($key, $rawDataArray) ? $rawDataArray [ $key ] : $defaultValue;
+	}
+
+	/**
+	 * php://input(request payload) 에 전체 내용을  array 로 돌려줌
+	 * @return array
+	 */
+	function requestPayloadArray() {
+		static $data = null;
+
+		if ($data === null) {
+			$data = array();
+			parse_str($this->rawRequestPayload(), $data);
+		}
+
+		return $data;
+	}
+
+	public function rawRequestPayload() {
 		static $data = null;
 
 		// FIXME enctype=multipart/form-data 를 지원하지 않는다. 예외 처리 해주어야 한다.
@@ -65,13 +97,15 @@ class RequestContext
 		return $data;
 	}
 
+
 	public function postParam($key, $defaultValue = null, $trim = false) {
 		if (!$this->isPost())
 			throw new \RuntimeException("request method is not post");
 
 		if (!is_scalar($key)) throw new \InvalidArgumentException("invalid key type");
 
-		$vars = getApplicationContext()->isDebug() && getApplicationContext()->getDebugFlag('requestPostFromRequest') != 0
+		$debugContext = getApplicationContext()->getDebugContext();
+		$vars = $debugContext->available() && $debugContext->get('requestPostFromRequest') != 0
 			? $_REQUEST
 			: $_POST;
 

@@ -8,13 +8,12 @@
 
 namespace classes\web\mvc;
 
-use classes\{
-	context\IApplicationContext,
+use classes\{context\IApplicationContext,
 	context\RequestContext,
 	exception\http\HTTPResponseException,
 	exception\mvc\ActionControllerResponseException,
-	web\response\HttpResponse
-};
+	web\response\HttpResponse,
+	web\response\IResponseDelegate};
 
 abstract class ActionController implements IController {
 	/** @var IApplicationContext */
@@ -129,6 +128,10 @@ abstract class ActionController implements IController {
 			} else {
 				throw new ActionControllerResponseException("unknown response", 500);
 			}
+		} elseif ($response instanceof IResponseDelegate) {
+			return $response->createResponse();
+		} elseif($response instanceof  HttpResponse) {
+			return $response;
 		} else {
 			throw new ActionControllerResponseException("unknown response", 500);
 		}
@@ -164,8 +167,9 @@ abstract class ActionController implements IController {
 	 */
 	private function validResponse($response) {
 		return
-			($response instanceof HttpResponse)
-			|| ($response instanceof PageBuilder)
+			$response instanceof HttpResponse
+			|| $response instanceof PageBuilder
+			|| $response instanceof IResponseDelegate
 			|| is_string($response);
 	}
 

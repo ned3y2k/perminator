@@ -39,7 +39,8 @@ function request_user_var_trim($value, $defaultValue) {
 function request_post_param($key, $defaultValue = null, $trim = false) {
 	if(!is_scalar($key)) throw new InvalidArgumentException("invalid key type");
 
-	$vars = getApplicationContext()->isDebug() && getApplicationContext()->getDebugFlag('requestPostFromRequest') != 0
+	$debugContext = getApplicationContext()->getDebugContext();
+	$vars = $debugContext->available() && $debugContext->get('requestPostFromRequest') != 0
 		? $_REQUEST
 		: $_POST;
 

@@ -39,6 +39,7 @@ class ServerEnvironment {
 	public function oswIsLinux() { return strpos(strtolower(php_uname('s')), 'linux') !== false; }
 
 	public function isForceHttp() {
-		return $this->applicationContext->isDebug() && getApplicationContext()->getDebugFlag('forceHttp');
+		$debugContext = $this->applicationContext->getDebugContext();
+		return $debugContext->available() && $debugContext->getAsBoolean('forceHttp');
 	}
 }
