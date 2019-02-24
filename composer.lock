@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "430fc45b027f5bcc6a96bc133fbd5e0d",
+    "content-hash": "9b966c96fd03f31e5ee7a3843cfddb03",
     "packages": [
         {
             "name": "chronon/mobile_detect",
@@ -1534,55 +1534,6 @@
                 "xunit"
             ],
             "time": "2018-08-09T05:50:03+00:00"
-        },
-        {
-            "name": "phpunit/phpunit-story",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpunit/phpunit-story.git",
-                "reference": "b8579ada6ede4fd2f4b49e8549a8a176606cae68"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpunit/phpunit-story/zipball/b8579ada6ede4fd2f4b49e8549a8a176606cae68",
-                "reference": "b8579ada6ede4fd2f4b49e8549a8a176606cae68",
-                "shasum": ""
-            },
-            "require": {
-                "ext-spl": "*",
-                "php": ">=5.2.7",
-                "phpunit/phpunit": ">=3.6.0RC1@stable"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "PHPUnit/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                ""
-            ],
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian Bergmann",
-                    "email": "sb@sebastian-bergmann.de",
-                    "role": "lead"
-                }
-            ],
-            "description": "Story extension for PHPUnit to facilitate Behaviour-Driven Development.",
-            "homepage": "http://www.phpunit.de/",
-            "keywords": [
-                "BDD",
-                "TDD",
-                "xunit"
-            ],
-            "abandoned": "behat/behat",
-            "time": "2013-04-02T16:07:28+00:00"
         },
         {
             "name": "psr/container",
