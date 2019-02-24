@@ -8,6 +8,7 @@
 namespace classes\context;
 
 use classes\lang\ArrayUtil;
+use classes\web\MultiPartFile;
 
 class RequestContext
 {
@@ -16,6 +17,48 @@ class RequestContext
 
 	/** @var RequestSession */
 	private $requestSession;
+	/** @var bool */
+	private $multiPart;
+	/** @var \classes\web\MultiPartFile[]|\classes\web\MultiPartFile[][] FIXME MultiFileGroup? */
+	private $multiPartFiles;
+
+	public function __construct() {
+		$this->multiPart = strpos(ArrayUtil::getValue($_SERVER, 'CONTENT_TYPE', ''), 'multipart/form-data') !== false;
+
+		if($this->isPost() && $this->multiPart){
+			$this->multiPartFiles = $this->resolveMultiPartFiles();
+		}
+
+	}
+
+	private function resolveMultiPartFiles() {
+		if (isset($_FILES) && is_array($_FILES) && count($_FILES) != 0) {
+			$items = array();
+
+			foreach ($_FILES as $key => $FILE) {
+				if(!is_array($FILE[ 'tmp_name' ]))
+					$items[ $key ] = new MultiPartFile($FILE[ 'tmp_name' ], $FILE[ 'name' ], $FILE[ 'size' ], $FILE[ 'error' ], $type = $FILE[ 'type' ]);
+				elseif(is_array($FILE))
+					$items[ $key ] = $this->resolveMultiPartFileArray($FILE);
+				else
+					throw new \UnsupportedOperationException();
+			}
+
+			return $items;
+		} else {
+			return null;
+		}
+	}
+
+	private function resolveMultiPartFileArray(array $FILE) {
+		$files = array();
+		$keys = array_keys($FILE[ 'tmp_name' ]);
+		foreach($keys as $key) {
+			$files[] = new MultiPartFile($FILE[ 'tmp_name' ][$key], $FILE[ 'name' ][$key], $FILE[ 'size' ][$key], $FILE[ 'error' ][$key], $type = $FILE[ 'type' ][$key]);
+		}
+
+		return $files;
+	}
 
 
 	public function getUserAgent(): string {
@@ -89,7 +132,9 @@ class RequestContext
 	public function rawRequestPayload() {
 		static $data = null;
 
-		// FIXME enctype=multipart/form-data 를 지원하지 않는다. 예외 처리 해주어야 한다.
+		if($this->multiPart)
+			throw new \InvalidArgumentException("multipart form data not supported");
+
 		if ($data === null) {
 			$data = file_get_contents('php://input'); // FIXME MAGIC_QUEOTE 에 대한 대비책이 필요 하다.
 		}
@@ -130,5 +175,21 @@ class RequestContext
 	 */
 	public function hasAcceptEncoding($encoding) {
 		return stripos(ArrayUtil::getValue($_SERVER, 'HTTP_ACCEPT_ENCODING'), $encoding) !== false;
+	}
+
+	public function multiPartFiles() {
+		return $this->multiPartFiles;
+	}
+
+	/**
+	 * @param $name
+	 *
+	 * @return MultiPartFile|null
+	 */
+	public function multiPartFile($name) {
+		if($this->multiPartFiles && array_key_exists($name, $this->multiPartFiles) ) {
+			return $this->multiPartFiles[$name];
+		}
+		return null;
 	}
 }
