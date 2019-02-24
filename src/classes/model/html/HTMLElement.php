@@ -41,11 +41,13 @@ abstract class HTMLElement implements IHtmlNode {
 
 	/**
 	 * 속성 가지고 있는지 여부 검사
-	 * @param string $key
+	 *
+	 * @param string $attributeName
+	 *
 	 * @return bool
 	 */
-	public function hasAttribute($key) {
-		return array_key_exists($key, $this->attributes);
+	public function hasAttribute($attributeName) {
+		return array_key_exists($attributeName, $this->attributes);
 	}
 
 	/**
@@ -57,6 +59,15 @@ abstract class HTMLElement implements IHtmlNode {
 	 */
 	public function setAttribute($attributeName, $attributeValue) {
 		$this->attributes[ $attributeName ] = $attributeValue;
+		return $this;
+	}
+
+	public function getAttribute($attributeName, $defaultAttributeValue) {
+		return array_key_exists($attributeName, $this->attributes) ? $this->attributes[$attributeName] : $defaultAttributeValue;
+	}
+	
+	public function removeAttribute(string $attributeName) {
+		unset($this->attributes[$attributeName]);
 		return $this;
 	}
 
