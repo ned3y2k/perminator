@@ -6,16 +6,16 @@
  * Time: 오후 6:00
  */
 
-namespace classes\web\dispatch\controller\error;
+namespace classes\web\mvc\error;
 
 
 use classes\context\ApplicationContext;
 use classes\web\response\HttpResponse;
 
 class ErrorResponseCreator implements IErrorResponseCreator {
-	function create(ApplicationContext $applicationContext, \Throwable $ex, int $statsCode): HttpResponse {
+	static function create(ApplicationContext $applicationContext, \Throwable $ex): HttpResponse {
 		$httpResponse = new HttpResponse();
-		$httpResponse->status($statsCode);
+		$httpResponse->status($ex->getCode());
 		$httpResponse->setContentType('text/plain');
 		
 		$body = $ex->getMessage()."\n\n";

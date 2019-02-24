@@ -8,7 +8,7 @@
 namespace classes\context;
 
 
-use classes\handler\throwable\IThrowableHandler;
+use classes\handler\throwable\IUnexpectedThrowableHandler;
 use classes\io\exception\DirectoryNotFoundException;
 use classes\io\exception\PermissionException;
 use classes\util\ServerEnvironment;
@@ -30,8 +30,8 @@ interface IApplicationContext {
 	 */
 	public function callNameNormalization($methodName, $line);
 
-	public function getExceptionHandler(): IThrowableHandler;
+	public function getExceptionHandler(): IUnexpectedThrowableHandler;
 
-	/** @param IThrowableHandler $exceptionHandler */
-	public function setExceptionHandler(IThrowableHandler $exceptionHandler);
+	/** @param IUnexpectedThrowableHandler $exceptionHandler */
+	public function setExceptionHandler(IUnexpectedThrowableHandler $exceptionHandler);
 }

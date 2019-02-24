@@ -8,7 +8,7 @@
 namespace classes\handler\throwable;
 
 
-interface IThrowableHandler {
+interface IUnexpectedThrowableHandler {
 	/**
 	 * @param string $exceptionClass
 	 * @param string $page

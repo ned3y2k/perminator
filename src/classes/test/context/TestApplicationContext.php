@@ -13,7 +13,7 @@ use classes\context\IApplicationContext;
 use classes\context\RequestContext;
 use classes\context\ResponseContext;
 use classes\context\SharedUserContext;
-use classes\handler\throwable\IThrowableHandler;
+use classes\handler\throwable\IUnexpectedThrowableHandler;
 use classes\util\ServerEnvironment;
 
 class TestApplicationContext implements IApplicationContext {
@@ -30,7 +30,7 @@ class TestApplicationContext implements IApplicationContext {
 	/** @var string[] */
 	private $debugFlags;
 
-	/** @var IThrowableHandler */
+	/** @var IUnexpectedThrowableHandler */
 	private $exceptionHandler;
 
 	public function __construct() {
@@ -70,8 +70,8 @@ class TestApplicationContext implements IApplicationContext {
 		return str_replace('::', '-', str_replace('\\', '.', $methodName)) . "($line)";
 	}
 
-	public function getExceptionHandler(): IThrowableHandler { return $this->exceptionHandler; }
+	public function getExceptionHandler(): IUnexpectedThrowableHandler { return $this->exceptionHandler; }
 
-	/** @param IThrowableHandler $exceptionHandler */
-	public function setExceptionHandler(IThrowableHandler $exceptionHandler) { $this->exceptionHandler = $exceptionHandler; }
+	/** @param IUnexpectedThrowableHandler $exceptionHandler */
+	public function setExceptionHandler(IUnexpectedThrowableHandler $exceptionHandler) { $this->exceptionHandler = $exceptionHandler; }
 }

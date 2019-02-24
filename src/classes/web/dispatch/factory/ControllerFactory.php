@@ -9,7 +9,10 @@
 namespace classes\web\dispatch\factory;
 
 
-use classes\{context\IApplicationContext, web\dispatch\controller\error\ErrorController, web\mvc\IController};
+use classes\{context\IApplicationContext,
+	exception\dispatch\ControllerNotFoundException,
+	exception\dispatch\NotControllerException,
+	web\mvc\IController};
 
 class ControllerFactory {
 	/**
@@ -17,22 +20,13 @@ class ControllerFactory {
 	 * @param IApplicationContext $applicationContext
 	 *
 	 * @return IController
+	 * @throws \Throwable
 	 */
-	public function createControllerInstance($fullName, IApplicationContext $applicationContext) {
-		try {
-			$this->loadAndCheckControllerClass($fullName);
+	public function createControllerInstance($fullName, IApplicationContext $applicationContext): IController {
+		$this->loadAndCheckControllerClass($fullName);
 
-			/** @var IController $controller instance */
-			$controller = new $fullName();
-		} catch (\Throwable $ex) {
-			if ($ex instanceof \InvalidArgumentException) {
-				$code = 404;
-			} else {
-				$code = 500;
-			}
-
-			$controller = new ErrorController($ex, $code);
-		}
+		/** @var IController $controller instance */
+		$controller = new $fullName();
 
 		$controller->setApplicationContext($applicationContext);
 		$controller->onCreate();
@@ -51,11 +45,11 @@ class ControllerFactory {
 			$check      = key_exists('classes\web\mvc\IController', $implements);
 
 			if (!$check) {
-				throw new \RuntimeException($fullName . " is not implements IController");
+				throw new NotControllerException($fullName);
 			}
 		} catch (\Throwable $ex) {
 			if (getApplicationContext()->getDebugContext()->available()) {
-				throw new \InvalidArgumentException($fullName . ' class not found');
+				throw new ControllerNotFoundException($fullName);
 			}
 		}
 	}

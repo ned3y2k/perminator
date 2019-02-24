@@ -10,9 +10,10 @@ namespace classes\web\dispatch\executor;
 
 
 use classes\context\IApplicationContext;
-use classes\io\exception\FileNotFoundException;
+use classes\exception\dispatch\ControllerFactoryException;
 use classes\web\dispatch\factory\ControllerFactory;
 use classes\web\dispatch\resolver\clazz\IControllerClassNameResolver;
+use classes\web\mvc\error\ErrorResponseCreator;
 use classes\web\mvc\IPageBuilder;
 use classes\web\response\HttpResponse;
 
@@ -33,11 +34,21 @@ class ControllerExecutor {
 
 	/**
 	 * @param $controllerName
+	 *
 	 * @return HttpResponse|IPageBuilder
+	 * @throws \Throwable
 	 */
 	public function execute($controllerName) {
-		$controller = $this->factory->createControllerInstance($controllerName, $this->context);
-		$controller->setApplicationContext($this->context);
-		return $controller->handleRequest();
+		try {
+			$controller = $this->factory->createControllerInstance($controllerName, $this->context);
+			$controller->setApplicationContext($this->context);
+
+			return $controller->handleRequest();
+		} catch(ControllerFactoryException $ex) {
+			return ErrorResponseCreator::create($this->context, $ex);
+		} catch (\Throwable $ex) {
+			throw $ex;
+		}
+
 	}
 }

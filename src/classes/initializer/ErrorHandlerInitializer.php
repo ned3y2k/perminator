@@ -17,8 +17,8 @@ use classes\exception\error\{
 	UserWarningException,
 	WarningException
 };
-use classes\handler\throwable\DefaultThrowableHandler;
-use classes\test\handler\BitTestCaseThrowableHandler;
+use classes\handler\throwable\DefaultUnexpectedThrowableHandler;
+use classes\test\handler\BitTestCaseUnexpectedThrowableHandler;
 use ErrorException;
 
 class ErrorHandlerInitializer implements Initializer {
@@ -36,10 +36,10 @@ class ErrorHandlerInitializer implements Initializer {
 
 	private function createExceptionHandler() {
 		if (!TEST) {
-			return new DefaultThrowableHandler();
+			return new DefaultUnexpectedThrowableHandler();
 //			/** @noinspection PhpIncludeInspection */
 		} else {
-			return new BitTestCaseThrowableHandler();
+			return new BitTestCaseUnexpectedThrowableHandler();
 		}
 	}
 

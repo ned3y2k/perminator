@@ -8,7 +8,7 @@
 namespace classes\context;
 
 
-use classes\handler\throwable\IThrowableHandler;
+use classes\handler\throwable\IUnexpectedThrowableHandler;
 use classes\io\exception\DirectoryNotFoundException;
 use classes\io\exception\PermissionException;
 use classes\io\File;
@@ -24,7 +24,7 @@ class ApplicationContext implements IApplicationContext {
 
 	private $environment;
 
-	/** @var IThrowableHandler */
+	/** @var IUnexpectedThrowableHandler */
 	private $exceptionHandler;
 
 	public function __construct() {
@@ -57,8 +57,8 @@ class ApplicationContext implements IApplicationContext {
 		return str_replace('::', '-', str_replace('\\', '.', $methodName)) . "($line)";
 	}
 
-	public function getExceptionHandler(): IThrowableHandler { return $this->exceptionHandler; }
+	public function getExceptionHandler(): IUnexpectedThrowableHandler { return $this->exceptionHandler; }
 
-	/** @param IThrowableHandler $exceptionHandler */
-	public function setExceptionHandler(IThrowableHandler $exceptionHandler) { $this->exceptionHandler = $exceptionHandler; }
+	/** @param IUnexpectedThrowableHandler $exceptionHandler */
+	public function setExceptionHandler(IUnexpectedThrowableHandler $exceptionHandler) { $this->exceptionHandler = $exceptionHandler; }
 }

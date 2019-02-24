@@ -7,9 +7,9 @@
 
 namespace classes\test\handler;
 
-use classes\handler\throwable\IThrowableHandler;
+use classes\handler\throwable\IUnexpectedThrowableHandler;
 
-class BitTestCaseThrowableHandler implements IThrowableHandler {
+class BitTestCaseUnexpectedThrowableHandler implements IUnexpectedThrowableHandler {
 	/**
 	 * @param string $exceptionClass 예외 클래스명
 	 * @param string $page           페이지 파일 경로

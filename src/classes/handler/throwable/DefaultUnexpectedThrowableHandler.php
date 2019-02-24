@@ -11,7 +11,7 @@ use classes\exception\http\HTTPResponseException;
 use classes\lang\ArrayUtil;
 use classes\util\ThrowableLogger;
 
-class DefaultThrowableHandler implements IThrowableHandler {
+class DefaultUnexpectedThrowableHandler implements IUnexpectedThrowableHandler {
 	/** @var string[] 예외 페이지들 */
 	private static $exceptionPages = array();
 
