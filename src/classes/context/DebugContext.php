@@ -25,7 +25,7 @@ class DebugContext {
 	}
 
 	public function available(): bool {
-		return $this->available;
+		return $this->available ? $this->available : false;
 	}
 
 	/**

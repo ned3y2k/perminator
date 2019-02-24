@@ -11,7 +11,8 @@ use classes\runtime\serialization\json\JsonSerializable;
 use classes\runtime\serialization\json\JsonStdClassUnserializer;
 use classes\util\ErrorDebugData;
 use classes\util\ThrowableLogger;
-use classes\web\HttpResponse;
+use classes\web\response\HttpResponse;
+use classes\web\response\IResponseDelegate;
 
 /**
  * Class JSONResult
@@ -21,7 +22,7 @@ use classes\web\HttpResponse;
  * FIXME string 버퍼 데이터(임시로 string을 저장 하는 놈인데 사라져야한다)
  * @package classes\model
  */
-class JSONResult extends UniqueObject implements JsonSerializable, IJsonUnserializable {
+class JSONResult extends UniqueObject implements JsonSerializable, IJsonUnserializable, IResponseDelegate {
 	protected $errorClassName;
 	/** @var int 에러코드 */
 	protected $errorCode = 0;
@@ -85,7 +86,7 @@ class JSONResult extends UniqueObject implements JsonSerializable, IJsonUnserial
 	 *
 	 * @return HttpResponse
 	 */
-	public function createHttpResponse($requireSession = false, $compress = true, array $headers = null) {
+	public function createResponse($requireSession = false, $compress = true, array $headers = null): HttpResponse {
 		$res                         = new HttpResponse($requireSession);
 		$res->getSetting()->compress = $compress;
 
@@ -178,13 +179,13 @@ class JSONResult extends UniqueObject implements JsonSerializable, IJsonUnserial
 		}
 
 		ThrowableLogger::getInstance()->writeObjectLog($throwable);
-		if (getApplicationContext()->isDebug() && getApplicationContext()->getDebugFlag('jsonResultThrowExceptionRaw') == 1) {
+		if (getApplicationContext()->getDebugContext()->available() && getApplicationContext()->getDebugContext()->get('jsonResultThrowExceptionRaw') == 1) {
 			$msg = str_replace('#', "\n#", $throwable->getTraceAsString());
 		} else {
 			$msg = $throwable->getMessage();
 		}
 
-		if(getApplicationContext()->isDebug()) {
+		if(getApplicationContext()->getDebugContext()->available()) {
 			$traces = $throwable->getTrace();
 			$msg = $msg.' root has debug file. '.$traces[0]['file'].' '.$traces[0]['line'];
 		}
