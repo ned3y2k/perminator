@@ -42,11 +42,11 @@ class DispatcherResolver implements IDispatcherResolver {
 	 * @throws \Exception
 	 */
 	public function __construct(IControllerClassNameResolver $controllerClassNameResolver) {
-		$this->applicationContext = ApplicationContextPool::get();
+		$this->applicationContext          = ApplicationContextPool::get();
 		$this->controllerClassNameResolver = $controllerClassNameResolver;
-		$this->interceptorManager = new InterceptorManager();
-		$this->responseFactory = new DispatcherResponseFactory($this->applicationContext, $this->interceptorManager);
-		$this->controllerExecutor = new ControllerExecutor($this->applicationContext, $controllerClassNameResolver);
+		$this->interceptorManager          = new InterceptorManager();
+		$this->responseFactory             = new DispatcherResponseFactory($this->applicationContext, $this->interceptorManager);
+		$this->controllerExecutor          = new ControllerExecutor($this->applicationContext, $controllerClassNameResolver);
 	}
 
 
@@ -70,10 +70,10 @@ class DispatcherResolver implements IDispatcherResolver {
 
 		try {
 			$res = $this->controllerExecutor->execute($fullName);
-			
+
 			return $res;
 		} catch (\Throwable $ex) {
-			if (in_array('classes\web\mvc\IExceptionHandledController', class_implements($fullName, false))) {
+			if (method_exists($fullName, 'handleException')) { // IExceptionHandledController or TraitExceptionHandledController
 				/** @var $fullName IExceptionHandledController */
 				return $fullName::handleException($this->applicationContext, $ex);
 			} else {

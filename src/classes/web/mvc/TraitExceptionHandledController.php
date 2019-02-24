@@ -9,6 +9,8 @@
 namespace classes\web\mvc;
 
 
-trait TraitExceptionHandledController {
+use classes\context\IApplicationContext;
 
+trait TraitExceptionHandledController {
+	abstract function handleException(IApplicationContext $applicationContext, \Throwable $throwable);
 }

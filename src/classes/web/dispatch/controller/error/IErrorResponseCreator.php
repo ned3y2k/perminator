@@ -9,10 +9,9 @@
 namespace classes\web\dispatch\controller\error;
 
 
+use classes\context\ApplicationContext;
 use classes\web\response\HttpResponse;
 
-interface IErrorPrinter {
-	function print(): HttpResponse {
-
-	}
+interface IErrorResponseCreator {
+	function create(ApplicationContext $applicationContext, \Throwable $ex, int $statsCode): HttpResponse;
 }
