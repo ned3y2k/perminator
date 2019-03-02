@@ -1,6 +1,5 @@
 <?php
 /**
- * Created by PhpStorm.
  * User: Kyeongdae
  * Date: 2018-08-16
  * Time: 오후 11:18
