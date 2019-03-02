@@ -7,6 +7,4 @@
 
 namespace classes\exception\loader;
 
-class PHPScriptNotFoundException extends \RuntimeException {
-
-}
+class PHPScriptNotFoundException extends \RuntimeException {}
