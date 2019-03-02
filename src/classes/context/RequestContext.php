@@ -68,6 +68,10 @@ class RequestContext
 			return $_SERVER['HTTP_USER_AGENT'];
 	}
 
+	/**
+	 * @FIXME ApplicationContext 로 올라가야 하는 개념이다
+	 * @return RequestSession
+	 */
 	public function getSession() {
 		if (!$this->requestSession)
 			$this->requestSession = new RequestSession($this);

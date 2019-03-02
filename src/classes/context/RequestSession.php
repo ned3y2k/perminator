@@ -68,4 +68,8 @@ class RequestSession {
 		throw new HTTPResponseException("Session not opened", 500);
 	}
 
+	public function delete($key) {
+		unset($_SESSION[$key]);
+	}
+
 }
