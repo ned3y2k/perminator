@@ -187,7 +187,7 @@ class JSONResult extends UniqueObject implements JsonSerializable, IJsonUnserial
 
 		if(getApplicationContext()->getDebugContext()->available()) {
 			$traces = $throwable->getTrace();
-			$msg = $msg.' root has debug file. '.$traces[0]['file'].' '.$traces[0]['line'];
+			$msg = $msg."\n".$traces[0]['file'].' '.$traces[0]['line'];
 		}
 
 		$result                 = self::error($msg, $throwable->getCode() == 0 ? -1 : $throwable->getCode()); // FIXME 예외 로깅 하는 부분이 있어야 한다.

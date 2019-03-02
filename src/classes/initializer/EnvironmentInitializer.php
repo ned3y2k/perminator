@@ -129,7 +129,7 @@ class EnvironmentInitializer implements Initializer {
 	private function assertIniValue($php_value, $expect, $fail_msg = "") {
 		if (ini_get($php_value) != $expect) {
 			http_response_code(500);
-			header('content-type: text/plain');
+			header('content-type: text/plain; charset=utf-8');
 
 			echo php_ini_loaded_file() . "\n";
 			echo "required set {$php_value} value {$expect}.\n{$fail_msg}";

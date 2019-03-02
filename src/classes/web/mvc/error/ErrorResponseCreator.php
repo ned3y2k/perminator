@@ -16,7 +16,7 @@ class ErrorResponseCreator implements IErrorResponseCreator {
 	static function create(ApplicationContext $applicationContext, \Throwable $ex): HttpResponse {
 		$httpResponse = new HttpResponse();
 		$httpResponse->status($ex->getCode());
-		$httpResponse->setContentType('text/plain');
+		$httpResponse->setContentType('text/plain; charset=utf-8');
 		
 		$body = $ex->getMessage()."\n\n";
 		$body .= $ex->getTraceAsString();
