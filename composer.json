@@ -1,0 +1,45 @@
+{
+  "name": "perminator/core",
+  "description": "Web Framework",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ned3y2k",
+      "email": "ned3y2k@gmail.com",
+      "homepage": "http://ned3y2k.co.kr",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "ext-json": "*",
+    "ext-iconv": "*",
+    "ext-mysqli": "*",
+    "ext-PDO": "*",
+    "ext-mcrypt": "*",
+    "ext-zlib": "*",
+    "ext-gd": "*",
+    "ext-redis": "*",
+    "ext-wincache": "*",
+    "ext-xml": "*",
+
+    "chronon/mobile_detect": "1.1.2",
+    "symfony/console": "~3.0|~4.0",
+    "symfony/filesystem": "~3.0|~4.0",
+    "symfony/process": "~3.0|~4.0",
+    "composer/composer": "1.8.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.5"
+
+  },
+  "autoload": {
+    "classmap": [
+      "src/"
+    ],
+    "files": [
+      "src/init.php"
+    ]
+  }
+}

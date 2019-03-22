@@ -1,0 +1,13 @@
+<mapper namespace="alarm">
+    <function id="select">
+        SELECT (#{var1} + #{var2}) * #{var1} AS r
+    </function>
+
+    <function id="selectSlashes">
+        SELECT #{var1} AS r
+    </function>
+
+    <function id="selectNull">
+        SELECT #{var1} AS r
+    </function>
+</mapper>
