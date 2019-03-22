@@ -39,13 +39,13 @@ class DebugContext {
 		return ArrayUtil::getValue($this->flags, $key, $default);
 	}
 
-	public function getAsBoolean($key = null, $default = null) {
+	public function getAsBoolean($key = null, $default = false) {
 		$val = $this->get($key, null);
 
 		if($val === null)
 			return $default;
 
-		if($val == 0 || $val == false)
+		if($val == 0 || $val == 'false')
 			return false;
 
 

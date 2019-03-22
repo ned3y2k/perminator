@@ -10,12 +10,11 @@ namespace classes\context;
 use classes\lang\ArrayUtil;
 use classes\web\MultiPartFile;
 
-class RequestContext
-{
+class RequestContext {
 	use ContextAssistTrait;
 	use RequestMethod;
 
-	/** @var RequestSession */
+	/** @var HttpSession */
 	private $requestSession;
 	/** @var bool */
 	private $multiPart;
@@ -25,7 +24,7 @@ class RequestContext
 	public function __construct() {
 		$this->multiPart = strpos(ArrayUtil::getValue($_SERVER, 'CONTENT_TYPE', ''), 'multipart/form-data') !== false;
 
-		if($this->isPost() && $this->multiPart){
+		if (array_key_exists('REQUEST_METHOD', $_SERVER) && $this->isPost() && $this->multiPart) {
 			$this->multiPartFiles = $this->resolveMultiPartFiles();
 		}
 
@@ -33,13 +32,13 @@ class RequestContext
 
 	private function resolveMultiPartFiles() {
 		if (isset($_FILES) && is_array($_FILES) && count($_FILES) != 0) {
-			$items = array();
+			$items = [];
 
 			foreach ($_FILES as $key => $FILE) {
-				if(!is_array($FILE[ 'tmp_name' ]))
-					$items[ $key ] = new MultiPartFile($FILE[ 'tmp_name' ], $FILE[ 'name' ], $FILE[ 'size' ], $FILE[ 'error' ], $type = $FILE[ 'type' ]);
-				elseif(is_array($FILE))
-					$items[ $key ] = $this->resolveMultiPartFileArray($FILE);
+				if (!is_array($FILE['tmp_name']))
+					$items[$key] = new MultiPartFile($FILE['tmp_name'], $FILE['name'], $FILE['size'], $FILE['error'], $type = $FILE['type']);
+				elseif (is_array($FILE))
+					$items[$key] = $this->resolveMultiPartFileArray($FILE);
 				else
 					throw new \UnsupportedOperationException();
 			}
@@ -51,10 +50,10 @@ class RequestContext
 	}
 
 	private function resolveMultiPartFileArray(array $FILE) {
-		$files = array();
-		$keys = array_keys($FILE[ 'tmp_name' ]);
-		foreach($keys as $key) {
-			$files[] = new MultiPartFile($FILE[ 'tmp_name' ][$key], $FILE[ 'name' ][$key], $FILE[ 'size' ][$key], $FILE[ 'error' ][$key], $type = $FILE[ 'type' ][$key]);
+		$files = [];
+		$keys  = array_keys($FILE['tmp_name']);
+		foreach ($keys as $key) {
+			$files[] = new MultiPartFile($FILE['tmp_name'][$key], $FILE['name'][$key], $FILE['size'][$key], $FILE['error'][$key], $type = $FILE['type'][$key]);
 		}
 
 		return $files;
@@ -70,17 +69,18 @@ class RequestContext
 
 	/**
 	 * @FIXME ApplicationContext 로 올라가야 하는 개념이다
-	 * @return RequestSession
+	 * @return HttpSession
 	 */
 	public function getSession() {
 		if (!$this->requestSession)
-			$this->requestSession = new RequestSession($this);
+			$this->requestSession = new HttpSession();
 
 		return $this->requestSession;
 	}
 
 	/**
 	 * 연결 스키마를 돌려준다.
+	 *
 	 * @link http://php.net/manual/en/function.http-build-url.php#114753
 	 * @return string http https
 	 */
@@ -114,19 +114,20 @@ class RequestContext
 	function requestPayload($key, $defaultValue = null, $trim = false) {
 		$rawDataArray = $this->requestPayloadArray();
 
-		if ($trim) return array_key_exists($key, $rawDataArray) ? request_user_var_trim($rawDataArray [ $key ], $defaultValue) : $defaultValue;
-		else return array_key_exists($key, $rawDataArray) ? $rawDataArray [ $key ] : $defaultValue;
+		if ($trim) return array_key_exists($key, $rawDataArray) ? request_user_var_trim($rawDataArray [$key], $defaultValue) : $defaultValue;
+		else return array_key_exists($key, $rawDataArray) ? $rawDataArray [$key] : $defaultValue;
 	}
 
 	/**
 	 * php://input(request payload) 에 전체 내용을  array 로 돌려줌
+	 *
 	 * @return array
 	 */
 	function requestPayloadArray() {
 		static $data = null;
 
 		if ($data === null) {
-			$data = array();
+			$data = [];
 			parse_str($this->rawRequestPayload(), $data);
 		}
 
@@ -136,7 +137,7 @@ class RequestContext
 	public function rawRequestPayload() {
 		static $data = null;
 
-		if($this->multiPart)
+		if ($this->multiPart)
 			throw new \InvalidArgumentException("multipart form data not supported");
 
 		if ($data === null) {
@@ -154,7 +155,7 @@ class RequestContext
 		if (!is_scalar($key)) throw new \InvalidArgumentException("invalid key type");
 
 		$debugContext = getApplicationContext()->getDebugContext();
-		$vars = $debugContext->available() && $debugContext->get('requestPostFromRequest') != 0
+		$vars         = $debugContext->available() && $debugContext->get('requestPostFromRequest') != 0
 			? $_REQUEST
 			: $_POST;
 
@@ -173,6 +174,7 @@ class RequestContext
 	/**
 	 * 해당 인코딩(charset이 아닌 압축)을 지원하는지 여부<br>
 	 * request_accept_encoding('gzip')
+	 *
 	 * @param $encoding
 	 *
 	 * @return bool
@@ -191,7 +193,7 @@ class RequestContext
 	 * @return MultiPartFile|null
 	 */
 	public function multiPartFile($name) {
-		if($this->multiPartFiles && array_key_exists($name, $this->multiPartFiles) ) {
+		if ($this->multiPartFiles && array_key_exists($name, $this->multiPartFiles)) {
 			return $this->multiPartFiles[$name];
 		}
 		return null;
