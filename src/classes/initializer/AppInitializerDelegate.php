@@ -7,11 +7,19 @@
 
 namespace classes\initializer;
 
-use app\classes\initializer\AppInitializer;
-
 class AppInitializerDelegate implements Initializer {
 	public function init() {
-		$initializer = new AppInitializer();
-		$initializer->init();
+		/** @var $loader \Composer\Autoload\ClassLoader */
+		$loader = spl_autoload_functions()[0][0];
+
+		$appInitializer = 'app\classes\initializer\AppInitializer';
+		if($loader->findFile($appInitializer)) {
+			/** @var Initializer $initializer */
+			$initializer = new $appInitializer();
+			$initializer->init();
+		} else {
+			echo $appInitializer . " Not Found. Please use a init Command.\n";
+		}
+
 	}
 }

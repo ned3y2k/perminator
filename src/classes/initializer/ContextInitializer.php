@@ -12,10 +12,12 @@ use classes\test\context\TestApplicationContext;
 
 class ContextInitializer implements Initializer {
 	public function init() {
-		\ApplicationContextPool::set(
-			!TEST
-				? new ApplicationContext()
-				: new TestApplicationContext()
-		);
+		if(!\ApplicationContextPool::isInitialized()) {
+			\ApplicationContextPool::set(
+				!TEST
+					? new ApplicationContext()
+					: new TestApplicationContext()
+			);
+		}
 	}
 }
